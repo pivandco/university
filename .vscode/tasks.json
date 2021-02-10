@@ -1,0 +1,28 @@
+{
+    "tasks": [
+        {
+            "type": "cppbuild",
+            "label": "C/C++: g++.exe сборка активного файла",
+            "command": "C:\\Users\\utkin.n\\mingw\\bin\\g++.exe",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${workspaceFolder}\\out.exe",
+                "-I${workspaceFolder}"
+            ],
+            "options": {
+                "cwd": "C:\\Users\\utkin.n\\mingw\\bin"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Задача создана отладчиком."
+        }
+    ],
+    "version": "2.0.0"
+}
