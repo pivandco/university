@@ -14,7 +14,7 @@ using namespace std;
 int main() {
 	setlocale(LC_ALL, "Russian");
 
-	int n = input("РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚СЂРѕРє (N)", 1), m = input("РљРѕР»РёС‡РµСЃС‚РІРѕ СЃС‚РѕР»Р±С†РѕРІ (M)", 1);
+	int n = input("Количество строк (N)", 1), m = input("Количество столбцов (M)", 1);
 	
 	int **table = (int **)calloc(n, sizeof(int *)) - BASE_INDEX;
 	for (int i = BASE_INDEX; i < BASE_INDEX + n; i++) {
@@ -26,7 +26,7 @@ int main() {
 	// 	table[i] = new int[m] - BASE_INDEX;
 	// }
 	
-	// Р—Р°РїРѕР»РЅРµРЅРёРµ
+	// Заполнение
 	cout << endl;
 	srand(time(0));
 	for (int i = BASE_INDEX; i < BASE_INDEX + n; i++) {
@@ -44,7 +44,7 @@ int main() {
 		for (int j = BASE_INDEX; j < BASE_INDEX + m; j++)
 			row_sum += table[i][j];
 
-		cout << "РЎСѓРјРјР° СЃС‚СЂРѕРєРё в„–" << i - BASE_INDEX + 1 << ": " << row_sum << endl;
+		cout << "Сумма строки №" << i - BASE_INDEX + 1 << ": " << row_sum << endl;
 
 		if (row_sum > max_sum || i == BASE_INDEX) {
 			max_sum = row_sum;
@@ -52,8 +52,8 @@ int main() {
 		}
 	}
 
-	cout << endl << "РЎС‚СЂРѕРєР° в„–" << max_sum_row - BASE_INDEX + 1 
-		 << " РёРјРµРµС‚ РЅР°РёР±РѕР»СЊС€СѓСЋ СЃСѓРјРјСѓ (" << max_sum << ")" << endl << endl;
+	cout << endl << "Строка №" << max_sum_row - BASE_INDEX + 1 
+		 << " имеет наибольшую сумму (" << max_sum << ")" << endl << endl;
 
 	for (int i = BASE_INDEX; i < BASE_INDEX + n; i++) {
 		free(table[i] + BASE_INDEX);
