@@ -3,6 +3,16 @@
 #include <iostream>
 
 template<typename T>
+T input(const char *prompt, T min, bool exclusive = false) {
+    int in;
+    do {
+        std::cout << prompt << " (от " << min << "): ";
+        std::cin >> in;
+    } while (in < min);
+    return in;
+}
+
+template<typename T>
 T input(const char *prompt, T min, T max, bool exclusive = false) {
     int in;
     do {
@@ -12,7 +22,7 @@ T input(const char *prompt, T min, T max, bool exclusive = false) {
     return in;
 }
 
-// Р“РµРЅРµСЂРёСЂСѓРµС‚ СЃР»СѓС‡Р°Р№РЅРѕРµ С‡РёСЃР»Рѕ РІ Р·Р°РґР°РЅРЅРѕРј РґРёР°РїР°Р·РѕРЅРµ (РІРєР»СЋС‡РёС‚РµР»СЊРЅРѕ).
+// Генерирует случайное число в заданном диапазоне (включительно).
 template<typename T>
 T rand_range(T from, T to) {
     return rand() % (to - from + 1) + from;
