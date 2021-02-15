@@ -6,74 +6,72 @@
 #include <ctime>
 #include "utils.h"
 
-#define BASE_INDEX 1
+#define CPP_DYNAMIC
+#define BASE_INDEX 100
 
 using namespace std;
 
 int main() {
 	setlocale(LC_ALL, "Russian");
 
-	int n_nums = input("Количество чисел", 1);
+	int n_nums = input("���������� �����", 1);
 
+#ifdef CPP_DYNAMIC
+    int *numbers = new int[n_nums] - BASE_INDEX;
+#else
     int *numbers = (int *)calloc(n_nums, sizeof(int)) - BASE_INDEX;
-    // int *numbers = new int[n_nums] - BASE_INDEX;
+#endif
 
-	int now = 1608705259;
+	// int now = 1608705259;
+	int now = 1613370784;
 	// int now = time(0);
-	cout << now << endl;
+	cout << "Seed: " << now << endl;
 	srand(now);
 
-	cout << "Числа: ";
-	for (int i = BASE_INDEX; i < BASE_INDEX + n_nums; i++) {
-		numbers[i] = rand_range(-5, 5);
-		cout << numbers[i] << " ";
+	cout << "�����: ";
+	for (int i = 0; i < n_nums; i++) {
+		numbers[i + BASE_INDEX] = rand_range(-5, 5);
+		cout << numbers[i + BASE_INDEX] << " ";
 	}
 	cout << endl;
 
-	int max_streak = 0, max_streak_last_i = n_nums, streak = 1;
+	int streak = 0, max_streak = 0, max_streak_last_i;
 
-	cout << "Длина макс. послед.: ";
+	for (int i = 0; i < n_nums - 1; i++) {
+		int this_num = numbers[i + BASE_INDEX], next_num = numbers[i + BASE_INDEX + 1];
+		if (this_num == 0)
+			continue;
 
-	bool last_positive = numbers[BASE_INDEX] > 0;
+		if (next_num != 0)
+			streak++;
 
-	for (int i = BASE_INDEX + 1; i < BASE_INDEX + n_nums; i++, streak++) {
-		bool this_positive = numbers[i] > 0;
-
-		if (this_positive == last_positive || numbers[i] == 0) {
-			if (max_streak < streak) {
-				// Записываем рекорд
+		if (this_num > 0 == next_num > 0 || next_num == 0) {	
+			if (streak > max_streak) {
 				max_streak = streak;
-				// Запоминаем, где эта последовательность
-				max_streak_last_i = i;
-			}
-			streak = 0;  // Сброс последовательности
-			if (numbers[i] == 0) {
-				max_streak_last_i--;
-				max_streak--;
+				streak = 0;
+				max_streak_last_i = i + BASE_INDEX;
 			}
 		}
-
-		last_positive = this_positive;
-	}
-	if (max_streak < streak) {
-		max_streak = streak;
-		max_streak_last_i = n_nums + BASE_INDEX;
 	}
 
+	cout << "����� ����. ������.: ";
 	cout << max_streak << endl;
 
 	if (max_streak == 1)
-		cout << max_streak_last_i - BASE_INDEX << "-й элемент:" << endl;
+		cout << max_streak_last_i - BASE_INDEX << "-� �������:" << endl;
 	else
-		cout << "С " << max_streak_last_i - max_streak - BASE_INDEX + 1 
-		     << "-й по " << max_streak_last_i - BASE_INDEX << "-й элемент:" << endl;
+		cout << "� " << max_streak_last_i - max_streak - BASE_INDEX + 1 
+		     << "-� �� " << max_streak_last_i - BASE_INDEX << "-� �������:" << endl;
 
 	for (int i = max_streak_last_i - max_streak; i < max_streak_last_i; i++)
 		cout << numbers[i] << " ";
 	cout << endl << endl;
 
+#ifdef CPP_DYNAMIC
+    delete[] (numbers + BASE_INDEX);
+#else
     free(numbers + BASE_INDEX);
-    // delete[] (numbers + BASE_INDEX);
+#endif
 
 	system("pause");
 	return 0;
