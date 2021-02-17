@@ -7,7 +7,7 @@
 #include "utils.h"
 
 #define CPP_DYNAMIC
-#define BASE_INDEX 100
+#define BASE_INDEX 10
 
 using namespace std;
 
@@ -23,9 +23,9 @@ int main() {
 #endif
 
 	// int now = 1608705259;
-	int now = 1613370784;
-	// int now = time(0);
-	cout << "Seed: " << now << endl;
+	// int now = 1613370784;
+	int now = time(0);
+	// cout << now << endl;
 	srand(now);
 
 	cout << "Числа: ";
@@ -35,36 +35,44 @@ int main() {
 	}
 	cout << endl;
 
-	int streak = 0, max_streak = 0, max_streak_last_i;
+	int max_streak = 0, max_streak_last_i = n_nums, streak = 1;
 
-	for (int i = 0; i < n_nums - 1; i++) {
-		int this_num = numbers[i + BASE_INDEX], next_num = numbers[i + BASE_INDEX + 1];
-		if (this_num == 0)
-			continue;
+	bool last_positive = numbers[BASE_INDEX] > 0,
+	     last_negative = numbers[BASE_INDEX] < 0;
 
-		if (next_num != 0)
-			streak++;
+	for (int i = 1; i < n_nums; i++, streak++) {
+		bool this_positive = numbers[i + BASE_INDEX] > 0,
+		     this_negative = numbers[i + BASE_INDEX] < 0;
 
-		if (this_num > 0 == next_num > 0 || next_num == 0) {	
-			if (streak > max_streak) {
+		if (this_positive == last_positive || this_negative == last_negative) {
+			if (max_streak < streak) {
+				// Записываем рекорд
 				max_streak = streak;
-				streak = 0;
-				max_streak_last_i = i + BASE_INDEX;
+				// Запоминаем, где эта последовательность
+				max_streak_last_i = i;
 			}
+			streak = 0;  // Сброс последовательности
 		}
+
+		last_positive = this_positive;
+		last_negative = this_negative;
+	}
+	if (max_streak < streak) {
+		max_streak = streak;
+		max_streak_last_i = n_nums + BASE_INDEX;
 	}
 
-	cout << "Длина макс. послед.: ";
-	cout << max_streak << endl;
+	cout << "Длина макс. послед.: "
+	     << max_streak << endl;
 
 	if (max_streak == 1)
 		cout << max_streak_last_i - BASE_INDEX << "-й элемент:" << endl;
 	else
-		cout << "С " << max_streak_last_i - max_streak - BASE_INDEX + 1 
-		     << "-й по " << max_streak_last_i - BASE_INDEX << "-й элемент:" << endl;
+		cout << "С " << max_streak_last_i - max_streak + 1 
+		     << "-й по " << max_streak_last_i << "-й элемент:" << endl;
 
 	for (int i = max_streak_last_i - max_streak; i < max_streak_last_i; i++)
-		cout << numbers[i] << " ";
+		cout << numbers[i + BASE_INDEX] << " ";
 	cout << endl << endl;
 
 #ifdef CPP_DYNAMIC
