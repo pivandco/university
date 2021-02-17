@@ -1,4 +1,4 @@
-// 9.2 : 23 - сдать
+// 9.2 : 23
 
 #include <iostream>
 #include <iomanip>
