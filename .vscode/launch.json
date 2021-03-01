@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "g++.exe - Сборка и отладка активного файла",
+            "name": "g++.exe",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\out.exe",
@@ -24,6 +24,25 @@
             ],
             "preLaunchTask": "C/C++: g++.exe сборка активного файла",
             "externalConsole": true
+        },
+        {
+            "name": "g++ Linux",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out",
+            "args": [],
+            "stopAtEntry": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "g++ Linux build",
+            "cwd": "${workspaceFolder}"
         }
     ]
 }

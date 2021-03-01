@@ -18,10 +18,27 @@
                 "$gcc"
             ],
             "group": {
-                "kind": "build",
-                "isDefault": true
+                "kind": "build"
             },
             "detail": "Задача создана отладчиком."
+        },
+        {
+            "type": "cppbuild",
+            "label": "g++ Linux build",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-g",
+                "${file}",
+                "-o",
+                "${workspaceFolder}/a.out",
+                "-I${workspaceFolder}"
+            ],
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build"
+            },
         }
     ],
     "version": "2.0.0"

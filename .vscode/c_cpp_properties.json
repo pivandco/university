@@ -15,6 +15,17 @@
             "cppStandard": "c++17",
             "intelliSenseMode": "windows-gcc-x86",
             "compilerPath": "\"C:\\Users\\utkin.n\\mingw\\bin\\g++.exe\""
+        },
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/**"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "linux-gcc-x64",
+            "compilerPath": "/usr/bin/g++"
         }
     ],
     "version": 4
