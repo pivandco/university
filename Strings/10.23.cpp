@@ -11,14 +11,15 @@
 void process_word(char *word, size_t word_length, bool encode) {
     for (size_t i = 0; i < word_length; i++) {
         size_t shift = word_length % (i + 1) + 1;
-        bool upper = isupper(word[i]);
+        bool upper;
+        upper = isupper(word[i]);
         word[i] = word[i] + shift * (encode ? 1 : -1);
 
         if (encode) {
             if (upper && word[i] > 'ß' || !upper && word[i] > 'ÿ')
                 word[i] -= 'ß' - 'À' + 1;
         } else {
-            if (upper && word[i] < 'À' || !upper && word[i] < 'à')
+            if (!upper && word[i] < 'À' || upper && word[i] < 'à')
                 word[i] += 'ß' - 'À' + 1;
         }
     }
