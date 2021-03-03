@@ -1,53 +1,75 @@
 // 10.23
 
+#include <windows.h>
 #include <iostream>
 #include <cstring>
 #include "utils.h"
 
-#define LINE_LENGTH 80 + 1
+#define LINE_LENGTH 80
 #define DELIMITERS ",. "
 
-char **get_words(const char *str, int &n_words) {
-    // Т. к. strtok портит принимаемую строку, используем копию
-    char *str_copy = (char*)calloc(LINE_LENGTH, sizeof(char));
-    strcpy(str_copy, str);
+void process_word(char *word, size_t word_length, bool encode) {
+    for (size_t i = 0; i < word_length; i++) {
+        size_t shift = word_length % (i + 1) + 1;
+        bool upper = isupper(word[i]);
+        word[i] = word[i] + shift * (encode ? 1 : -1);
 
-    // Копируем первое слово
-    char **words_array = (char**)calloc(1, sizeof(char*));
-    words_array[0] = (char*)calloc(LINE_LENGTH, sizeof(char));
-    strtok(str_copy, DELIMITERS);
-    strcpy(words_array[0], str_copy);
-    n_words = 1;
-
-    // Копируем следующие
-    for (; str_copy = strtok(nullptr, DELIMITERS); n_words++) {
-        words_array = (char**)realloc(words_array, sizeof(char *) * (n_words + 1));
-        words_array[n_words] = (char*)calloc(LINE_LENGTH, sizeof(char));
-        strcpy(words_array[n_words], str_copy);
+        if (encode) {
+            if (upper && word[i] > 'Я' || !upper && word[i] > 'я')
+                word[i] -= 'Я' - 'А' + 1;
+        } else {
+            if (upper && word[i] < 'А' || !upper && word[i] < 'а')
+                word[i] += 'Я' - 'А' + 1;
+        }
     }
-
-    return words_array;
 }
 
-char *encode(char *word) {
-    
+void process_line(char *line, bool encode = true) {
+    if (!strlen(line)) return;
+
+    char *line_copy = (char *)calloc(LINE_LENGTH, sizeof(char));
+    strcpy(line_copy, line);
+
+    char *word = strtok(line_copy, DELIMITERS);
+
+    do {
+        size_t word_length = strlen(word);
+        process_word(word, word_length, encode);
+        memcpy(line + (size_t)(word - line_copy), word, word_length);
+    } while (word = strtok(nullptr, DELIMITERS));
+
+    free(line_copy);
 }
 
 int main() {
-    setlocale(LC_ALL, "Russian");
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
 
     int n = input("Количество строк", 2, 10);
     std::cin.ignore(INT32_MAX, '\n');
 
-    char **strings = (char**)calloc(n, sizeof(char*));
+    char **lines = (char**)calloc(n, sizeof(char*));
     for (int i = 0; i < n; i++) {
-        strings[i] = (char*)calloc(LINE_LENGTH, sizeof(char));
+        lines[i] = (char*)calloc(LINE_LENGTH + 1, sizeof(char));
         std::cout << "> ";
-        std::cin.getline(strings[i], LINE_LENGTH);
-
-        int n_words;
-        char **words = get_words(strings[i], n_words);
+        std::cin.getline(lines[i], LINE_LENGTH);
     }
+
+    std::cout << std::endl;
+
+    for (int i = 0; i < n; i++) {
+        process_line(lines[i]);
+        std::cout << lines[i] << " | ";
+        process_line(lines[i], false);
+        std::cout << lines[i] << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    for (int i = 0; i < n; i++) {
+        free(lines[i]);
+    }
+    free(lines);
 
     system("pause");
     return 0;
