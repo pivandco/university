@@ -60,7 +60,12 @@ int main() {
 
     for (int i = 0; i < n; i++) {
         process_line(lines[i]);
-        std::cout << lines[i] << " | ";
+        std::cout << lines[i] << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    for (int i = 0; i < n; i++) {
         process_line(lines[i], false);
         std::cout << lines[i] << std::endl;
     }
