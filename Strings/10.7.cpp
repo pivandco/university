@@ -10,30 +10,40 @@
 
 const char *VOWELS = "‡ÛÓ˚Ë˝ˇ˛∏Â¿”Œ€»›ﬂﬁ®≈";
 
-int count_vowels(const char *word) {
+bool word_matches(const char *word) {
     int word_length = strlen(word),
         vowels = 0;
     for (int i = 0; i < word_length; i++) {
         if (strchr(VOWELS, word[i]))
             vowels++;
     }
-    return vowels;
+    
+    int consonants = word_length - vowels;
+    return consonants > vowels;
 }
 
-void process_text(const char *text, char *words) {
-    char *text_copy = (char*)calloc(strlen(text), sizeof(char));
-    char *word = strtok(text_copy, DELIMITERS);
+int word_sorter(const void *a, const void *b) {
+    int diff = 0;
+    char *word_a = *((char**)a),
+         *word_b = *((char**)b);
+
+    for (int i = 0; !diff && word_a[i] && word_b[i]; i++)
+        diff = word_a[i] - word_b[i];
+
+    return diff;
+}
+
+void get_words(char *text, char **& matching_words, int &matching_words_count) {
+    char *word = strtok(text, DELIMITERS);
+    matching_words = nullptr;
+    matching_words_count = 0;
 
     do {
-        int vowels = count_vowels(word),
-            consonants = strlen(word) - vowels;
-
-        if (consonants > vowels) {
-            strcat(words, word);
+        if (word_matches(word)) {
+            matching_words = (char**)realloc(matching_words, ++matching_words_count * sizeof(char*));
+            matching_words[matching_words_count - 1] = word;
         }
     } while(word = strtok(nullptr, DELIMITERS));
-
-    free(text_copy);
 }
 
 int main() {
@@ -52,11 +62,17 @@ int main() {
         strcat(text, new_line);
     }
 
-    char *words = (char*)calloc(LINE_LENGTH * n + 1, sizeof(char));
-    process_text(text, words);
-    std::cout << std::endl << words << std::endl;
+    char **matching_words = nullptr;
+    int matching_words_count = 0;
+    get_words(text, matching_words, matching_words_count);
+    qsort(matching_words, matching_words_count, sizeof(char*), word_sorter);
 
-    free(words);
+    for (int i = 0; i < matching_words_count; i++) {
+        std::cout << matching_words[i] << ' ';
+    }
+    std::cout << std::endl;
+    
+    free(matching_words);
     free(text);
 
     system("pause");
