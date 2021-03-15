@@ -17,6 +17,22 @@
             "compilerPath": "\"C:\\Users\\utkin.n\\mingw\\bin\\g++.exe\""
         },
         {
+            "name": "Win32-Home",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "windows-gcc-x86",
+            "compilerPath": "E:\\MinGW\\bin\\g++.exe"
+        },
+        {
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}",

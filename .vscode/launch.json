@@ -26,6 +26,27 @@
             "externalConsole": true
         },
         {
+            "name": "g++.exe - home",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\out.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "E:\\MinGW\\bin",
+            "environment": [],
+            "MIMode": "gdb",
+            "miDebuggerPath": "E:\\MinGW\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "C/C++: g++.exe сборка активного файла (home)",
+            "externalConsole": true
+        },
+        {
             "name": "g++ Linux",
             "type": "cppdbg",
             "request": "launch",
