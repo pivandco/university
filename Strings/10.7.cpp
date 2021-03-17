@@ -2,24 +2,31 @@
 
 #include <windows.h>
 #include <iostream>
-#include <cstring>
+#include <string.h>
+#include <strings.h>
 #include "utils.h"
 
 #define LINE_LENGTH 80
-#define DELIMITERS ",. "
-
-const char *VOWELS = "ауоыиэяюёеАУОЫИЭЯЮЁЕ";
+#define DELIMITERS ",. \n"
 
 bool word_matches(const char *word) {
+    const char *VOWELS = "ауоыиэяюёе";
+
     int word_length = strlen(word),
         vowels = 0;
     for (int i = 0; i < word_length; i++) {
-        if (strchr(VOWELS, word[i]))
+        if (strchr(VOWELS, tolower(word[i])))
             vowels++;
     }
     
-    int consonants = word_length - vowels;
-    return consonants > vowels;
+    return word_length - vowels > vowels;
+}
+
+bool is_word_in_array(char **arr, int len, char *word) {
+    for (int i = 0; i < len; i++)
+        if (!strcasecmp(arr[i], word))
+            return true;
+    return false;
 }
 
 int word_sorter(const void *a, const void *b) {
@@ -28,7 +35,7 @@ int word_sorter(const void *a, const void *b) {
          *word_b = *((char**)b);
 
     for (int i = 0; !diff && word_a[i] && word_b[i]; i++)
-        diff = word_a[i] - word_b[i];
+        diff = tolower(word_a[i]) - tolower(word_b[i]);
 
     return diff;
 }
@@ -39,7 +46,7 @@ void get_words(char *text, char **& matching_words, int &matching_words_count) {
     matching_words_count = 0;
 
     do {
-        if (word_matches(word)) {
+        if (word_matches(word) && !is_word_in_array(matching_words, matching_words_count, word)) {
             matching_words = (char**)realloc(matching_words, ++matching_words_count * sizeof(char*));
             matching_words[matching_words_count - 1] = word;
         }
@@ -47,6 +54,7 @@ void get_words(char *text, char **& matching_words, int &matching_words_count) {
 }
 
 int main() {
+    setlocale(LC_ALL, "Russian");
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
 
@@ -58,20 +66,25 @@ int main() {
         std::cout << "> ";
         char new_line[LINE_LENGTH + 1];
         std::cin.getline(new_line, LINE_LENGTH);
-        strcat(text, " ");
+        strcat(text, "\n");
         strcat(text, new_line);
     }
 
     char **matching_words = nullptr;
     int matching_words_count = 0;
     get_words(text, matching_words, matching_words_count);
-    qsort(matching_words, matching_words_count, sizeof(char*), word_sorter);
+   
+    if (!matching_words_count)
+        std::cout << "Нет подходящих слов" << std::endl;
+    else {
+        qsort(matching_words, matching_words_count, sizeof(char*), word_sorter);
 
-    for (int i = 0; i < matching_words_count; i++) {
-        std::cout << matching_words[i] << ' ';
+        std::cout << std::endl;
+        for (int i = 0; i < matching_words_count; i++)
+            std::cout << matching_words[i] << ' ';
+        std::cout << std::endl;
     }
-    std::cout << std::endl;
-    
+
     free(matching_words);
     free(text);
 
