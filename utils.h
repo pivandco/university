@@ -23,6 +23,7 @@ T input(const char *prompt, T min, T max, bool exclusive = false) {
 }
 
 // Генерирует случайное число в заданном диапазоне (включительно).
+// ладно
 template<typename T>
 T rand_range(T from, T to) {
     return rand() % (to - from + 1) + from;
