@@ -41,8 +41,8 @@ public:
         size_t untouched_before_size = from_ptr - str;
         char *new_str = (char *)calloc(new_size + 1, sizeof(char));
         memcpy(new_str, str, untouched_before_size);
-        memcpy(new_str + untouched_before_size, to, to_size);
-        strcpy(new_str + untouched_before_size + to_size, from_ptr + to_size);
+        strcpy(new_str + untouched_before_size, to);
+        strcat(new_str + untouched_before_size + to_size, from_ptr + from_size);
 
         free(str);
         str = new_str;
@@ -60,7 +60,7 @@ public:
 
     String operator+(String &other) {
         size_t this_size = size(), other_size = other.size();
-        String new_string(size() + other.size() - 1);
+        String new_string(size() + other.size());
         memcpy(new_string.str, str, this_size);
         strcpy(new_string.str + this_size, other.str);
 
@@ -86,22 +86,24 @@ using namespace std;
 int main() {
     String test("aaabbbcccbbbeeebbbggg");
 
-    cout << "String: " << test << endl;
-    cout << "Size: " << test.size() << endl;
-    cout << "find(\"bbb\"): " << test.find("bbb") << endl;
+    cout << "String:\t" << test << endl;
+    cout << "Size:\t" << test.size() << endl;
+    cout << "find(\"bbb\"):\t" << test.find("bbb") << endl;
 
     test.replace_once("bbb", "fff");
-    cout << "replace_once(\"bbb\", \"fff\"): " << test << endl;
+    cout << "replace_once(\"bbb\", \"fff\"):\t" << test << endl;
 
     test.replace_all("b", "s");
-    cout << "replace_all(\"bbb\", \"sss\"): " << test << endl;
+    cout << "replace_all(\"bbb\", \"sss\"):\t" << test << endl;
 
     test.remove("a");
-    cout << "remove(\"a\"): " << test << endl;
+    cout << "remove(\"a\"):\t" << test << endl;
+    test.remove("s");
+    cout << "remove(\"s\"):\t" << test << endl;
 
-    cout << "test[5]: " << test[5] << endl;
+    cout << "test[5]:\t" << test[5] << endl;
 
-    cout << "test[666]: ";
+    cout << "test[666]:\t";
     try {
         test[666];
     } catch(std::out_of_range e) {
@@ -109,11 +111,13 @@ int main() {
     }
 
     test[0] = 'z';
-    cout << "test[0] = 'z': " << test << endl;
+    cout << "test[0] = 'z':\t" << test << endl;
 
     String a("abc"), b("def");
     String c = a + b;
-    cout << "\"abc\" + \"def\": " << c << endl;
+    cout << "\"abc\" + \"def\":\t" << c << endl;
+
+    system("pause");
 
     return 0;
 }
