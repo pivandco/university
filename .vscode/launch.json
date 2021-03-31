@@ -64,6 +64,26 @@
             ],
             "preLaunchTask": "g++ Linux build",
             "cwd": "${workspaceFolder}"
-        }
+        },
+        {
+            "name": "LinkedList",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\LinkedList\\a.out",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "C:\\Users\\utkin.n\\mingw\\bin",
+            "environment": [],
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\Users\\utkin.n\\mingw\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "externalConsole": true
+        },
     ]
 }

@@ -7,7 +7,7 @@ using namespace std;
 void list_print(List p)
 {
     if (!p) {
-        printf("Ошибка: список == null\n");
+        // printf("Пустой список\n");
         return;
     }
     while (p)
@@ -18,15 +18,14 @@ void list_print(List p)
     printf("\n");
 }
 
-List list_prepend(List p, int key)
+void list_prepend(List &p, int key)
 {
-    return new ListItem{key, p};
+    p = new ListItem{key, p};
 }
 
 List list_find(List p, int key)
 {
     if (!p) {
-        printf("Ошибка: список == null\n");
         return nullptr;
     }
     while (p && p->key != key)
@@ -37,7 +36,6 @@ List list_find(List p, int key)
 void list_insert_after(List p, int key)
 {
     if (!p) {
-        printf("Ошибка: список == null\n");
         return;
     }
     List q = new ListItem{key, p->next};
@@ -46,43 +44,35 @@ void list_insert_after(List p, int key)
 
 void list_delete_after(List head)
 {
-    if (!head) {
-        printf("Ошибка: список == null\n");
+    if (!head)
         return;
-    }
+
     List next = head->next;
     head->next = next->next;
     delete next;
 }
 
-List list_delete_key(List head, int key)
+void list_delete_key(List &head, int key)
 {
-    if (!head) {
-        printf("Ошибка: список == null\n");
-        return nullptr;
-    }
+    if (!head)
+        return;
 
-    // Случай 1: удаление первого элемента
-    if (head->key == key) {
-        List new_head = head->next;
-        delete head;
-        return new_head;
-    }
-
-    // Случай 2: удаление элемента в середине или в конце
     List i = head;
-    while (i->next && i->next->key != key)
-        i = i->next;
-
-    if (!i->next) {
-        printf("Ошибка: ключ не найден\n");
-        return head;
+    while (i->next) {
+        if (i->next->key == key) {
+            List next_next = i->next->next;
+            delete i->next;
+            i->next = next_next;
+        } else {
+            i = i->next;
+        }
     }
 
-    List after_target = i->next->next;
-    delete i->next;
-    i->next = after_target;
-    return head;
+    if (head->key == key) {
+        List old_head = head;
+        head = head->next;
+        delete old_head;
+    }
 }
 
 void list_free(List p)
