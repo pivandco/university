@@ -60,9 +60,9 @@ void list_delete_key(List &head, int key)
     List i = head;
     while (i->next) {
         if (i->next->key == key) {
-            List next_next = i->next->next;
-            delete i->next;
-            i->next = next_next;
+            List to_delete = i->next;
+            i->next = to_delete->next;
+            delete to_delete;
         } else {
             i = i->next;
         }
