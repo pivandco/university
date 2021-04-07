@@ -4,13 +4,13 @@
 #include <cstring>
 #include <exception>
 
-class String;
-std::ostream &operator<<(std::ostream &, String &);
-
 class String {
-    friend std::ostream &operator<<(std::ostream &, String &);
+    friend std::ostream &operator<<(std::ostream &, const String &);
+    friend String operator+(const String &, const String &);
 
 public:
+    String() = delete;
+
     String(size_t size) {
         str = (char *)calloc(size + 1, sizeof(char));
     }
@@ -19,13 +19,13 @@ public:
         strcpy(str, source);
     }
 
-    String(String const & other) : String(other.str) {}
+    String(const String & other) : String(other.str) {}
 
     ~String() {
         free(str);
     }
 
-    size_t size() {
+    size_t size() const {
         return strlen(str);
     }
 
@@ -66,17 +66,17 @@ public:
         while (replace_once(from, to));
     }
 
-    void remove(const char *target) {
-        replace_all(target, "");
+    String slice(size_t from, size_t count) {
+        if (from >= size() || from + count > size())
+            throw std::out_of_range("out of range");
+
+        String new_str(count + 1);
+        memcpy(new_str.str, str + from, count);
+        return new_str;
     }
 
-    String operator+(String &other) {
-        size_t this_size = size(), other_size = other.size();
-        String new_string(size() + other.size());
-        memcpy(new_string.str, str, this_size);
-        strcpy(new_string.str + this_size, other.str);
-
-        return new_string;
+    void remove(const char *target) {
+        replace_all(target, "");
     }
 
     char &operator[](size_t index) {
@@ -89,8 +89,17 @@ private:
     char *str;
 };
 
-std::ostream &operator<<(std::ostream &os, String & str) {
+std::ostream &operator<<(std::ostream &os, const String & str) {
     return os << str.str;
+}
+
+String operator+(const String &a, const String &b) {
+    size_t this_size = a.size(), other_size = b.size();
+    String new_string(a.size() + b.size());
+    strcpy(new_string.str, a.str);
+    strcat(new_string.str, b.str);
+
+    return new_string;
 }
 
 using namespace std;
@@ -99,6 +108,14 @@ int main() {
     String test("aaabbbcccbbbeeebbbggg");
 
     cout << "Size of \"abc\":\t" << String("abc").size() << endl << endl;
+
+    String test2("abcdef");
+    cout << "slice(3, 3) of \"abcdef\":\t" << test2.slice(3, 3) << endl;
+    try {
+        cout << "slice(3, 4) of \"abcdef\":\t" << test2.slice(3, 4) << endl;
+    } catch(std::out_of_range e) {
+        cout << e.what() << endl;
+    }
 
     cout << "String:\t" << test << endl;
     cout << "find(\"bbb\"):\t" << test.find("bbb") << endl;
