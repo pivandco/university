@@ -38,12 +38,22 @@ public:
         if (!from_ptr)
             return false;
 
-        size_t from_size = strlen(from), to_size = strlen(to);
+        // Размер заменяемой строки
+        size_t from_size = strlen(from);
+        // Размер строки на замену
+        size_t to_size = strlen(to);
+        // Новый размер строки после замены
         size_t new_size = size() - from_size + to_size;
-        size_t untouched_before_size = from_ptr - str;
+
         char *new_str = (char *)calloc(new_size + 1, sizeof(char));
+
+        // Размер фрагмента строки от ее начала до индекса заменяемого участка
+        size_t untouched_before_size = from_ptr - str;
+        // Копируем нетронутый участок перед заменяемым
         memcpy(new_str, str, untouched_before_size);
+        // Копируем новый фрагмент
         strcpy(new_str + untouched_before_size, to);
+        // Копируем нетронутый участок после заменяемого
         strcat(new_str + untouched_before_size + to_size, from_ptr + from_size);
 
         free(str);
