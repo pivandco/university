@@ -1,3 +1,5 @@
+// 12.3
+
 #include <iostream>
 #include <cstring>
 #include <exception>
@@ -86,8 +88,9 @@ using namespace std;
 int main() {
     String test("aaabbbcccbbbeeebbbggg");
 
+    cout << "Size of \"abc\":\t" << String("abc").size() << endl << endl;
+
     cout << "String:\t" << test << endl;
-    cout << "Size:\t" << test.size() << endl;
     cout << "find(\"bbb\"):\t" << test.find("bbb") << endl;
 
     test.replace_once("bbb", "fff");
