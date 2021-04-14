@@ -1,12 +1,11 @@
 all: a.out
 	./a.out
 
-SOURCES = Fraction.cpp gtest.cpp
+SOURCES = gtest.cpp
 
-.PHONY: gtest
-gtest:
-	cmake -G 'Unix Makefiles' -B googletest-build ../../googletest
+googletest-build:
+	cmake -G 'Unix Makefiles' -B googletest-build -DCMAKE_MAKE_PROGRAM=C:\Users\utkin.n\mingw\bin\make.exe ../../googletest
 	$(MAKE) -C googletest-build
 
-a.out: $(SOURCES) | gtest
-	g++ -g -I../../googletest/googletest/include -Lgoogletest-build/lib $^ -lpthread -lgtest -lgtest_main
+a.out: $(SOURCES) | googletest-build
+	g++ -o a.out -g -I../../googletest/googletest/include -Lgoogletest-build/lib $^ -lpthread -lgtest -lgtest_main
