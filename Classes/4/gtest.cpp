@@ -11,13 +11,13 @@ void EXPECT_FRAC_EQ(Fraction<T> &frac, T num, T denom) {
 }
 
 TEST(Fraction, reduce) {
-    Fraction<int> f1(10, 10);
+    Fraction<int> f1(-10, -10);
     f1.reduce();
     EXPECT_FRAC_EQ(f1, 1, 1);
 
-    Fraction<int> f2(10, 5);
+    Fraction<int> f2(10, -5);
     f2.reduce();
-    EXPECT_FRAC_EQ(f2, 2, 1);
+    EXPECT_FRAC_EQ(f2, -2, 1);
 }
 
 TEST(Fraction, reduce_already_reduced) {
@@ -28,11 +28,6 @@ TEST(Fraction, reduce_already_reduced) {
 
 TEST(Fraction, zero_denominator) {
     EXPECT_THROW(Fraction<int> f(1, 0), ZeroDivisionException);
-}
-
-TEST(Fraction, flipped) {
-    auto f = Fraction<int>(1, 3).flipped();
-    EXPECT_FRAC_EQ(f, 3, 1);
 }
 
 TEST(Fraction, add) {

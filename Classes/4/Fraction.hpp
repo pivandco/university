@@ -34,6 +34,10 @@ public:
         T d = gcd(_numerator, _denominator);
         _numerator /= d;
         _denominator /= d;
+        if (_denominator < 0) {
+            _denominator *= -1;
+            _numerator *= -1;
+        }
     }
 
     std::string to_string() const {
@@ -48,27 +52,31 @@ private:
     T _numerator, _denominator;
 };
 
-Fraction operator+(const Fraction &a, const Fraction &b) {
-    Fraction result(
-        a.nominator() * b.denominator() + b.nominator() * a.denominator(),
+template<typename T>
+Fraction<T> operator+(const Fraction<T> &a, const Fraction<T> &b) {
+    Fraction<T> result(
+        a.numerator() * b.denominator() + b.numerator() * a.denominator(),
         a.denominator() * b.denominator()
     );
     result.reduce();
     return result;
 }
 
-Fraction operator-(const Fraction &a, const Fraction &b) {
-    return operator+(-b);
+template<typename T>
+Fraction<T> operator-(const Fraction<T> &a, const Fraction<T> &b) {
+    return a + Fraction<T>(-b.numerator(), b.denominator());
 }
 
-Fraction operator*(const Fraction &a, const Fraction &b) {
-    Fraction result(a.numerator() * b.numerator(), a.denominator() * b.denominator());
+template<typename T>
+Fraction<T> operator*(const Fraction<T> &a, const Fraction<T> &b) {
+    Fraction<T> result(a.numerator() * b.numerator(), a.denominator() * b.denominator());
     result.reduce();
     return result;
 }
 
-Fraction operator/(const Fraction &a, const Fraction &b) {
-    return operator*(Fraction(_denominator, _numerator));
+template<typename T>
+Fraction<T> operator/(const Fraction<T> &a, const Fraction<T> &b) {
+    return a * Fraction<T>(b.denominator(), b.numerator());
 }
 
 template <typename T>
