@@ -54,7 +54,22 @@
             "problemMatcher": [
                 "$gcc"
             ],
-            "group": "build",
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Fractions",
+            "command": "/usr/bin/make",
+            "args": [
+                "a.out",
+                "COVERAGE=1"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/Classes/4"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ],
     "version": "2.0.0"

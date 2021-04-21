@@ -1,6 +1,7 @@
 {
     "files.encoding": "windows1251",
     "files.associations": {
+        "*.html": "html",
         "array": "cpp",
         "atomic": "cpp",
         "*.tcc": "cpp",
@@ -55,6 +56,22 @@
         "stdexcept": "cpp",
         "streambuf": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "hash_map": "cpp",
+        "bit": "cpp",
+        "bitset": "cpp",
+        "compare": "cpp",
+        "complex": "cpp",
+        "concepts": "cpp",
+        "condition_variable": "cpp",
+        "csignal": "cpp",
+        "future": "cpp",
+        "mutex": "cpp",
+        "ranges": "cpp",
+        "stop_token": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "valarray": "cpp",
+        "variant": "cpp"
     }
 }

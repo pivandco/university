@@ -5,6 +5,25 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Fractions",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Classes/4/a.out",
+            "cwd": "${workspaceFolder}/Classes/4",
+            "args": [],
+            "stopAtEntry": false,
+            "environment": [],
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Fractions"
+        },
+        {
             "name": "g++.exe",
             "type": "cppdbg",
             "request": "launch",

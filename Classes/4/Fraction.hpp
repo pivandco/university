@@ -1,13 +1,16 @@
 #pragma once
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <limits>
 
+#include "SafeArithmetics.hpp"
+
 template<typename T>
 static T gcd(T a, T b) {
-    a = abs(a);
-    b = abs(b);
+    a = SafeArithmetics<T>::abs(a);
+    b = SafeArithmetics<T>::abs(b);
     while (a && b) {
         if (a > b)
             a %= b;
@@ -17,17 +20,12 @@ static T gcd(T a, T b) {
     return a + b;
 }
 
-class ZeroDivisionException : std::domain_error {
-public:
-    ZeroDivisionException(const char *msg) : std::domain_error(msg) {}
-};
-
 template<typename T>
 class Fraction {
 public:
     Fraction(T numerator, T denominator) : _numerator(numerator), _denominator(denominator) {
         if (!_denominator)
-            throw ZeroDivisionException("denominator is 0");
+            throw std::domain_error("denominator is 0");
     }
 
     T numerator() const { return _numerator; }
@@ -57,9 +55,10 @@ private:
 
 template<typename T>
 Fraction<T> operator+(const Fraction<T> &a, const Fraction<T> &b) {
+    using SA = SafeArithmetics<T>;
     Fraction<T> result(
-        a.numerator() * b.denominator() + b.numerator() * a.denominator(),
-        a.denominator() * b.denominator()
+        SA::add(SA::multiply(a.numerator(), b.denominator()), SA::multiply(b.numerator(), a.denominator())),
+        SA::multiply(a.denominator(), b.denominator())
     );
     result.reduce();
     return result;
@@ -72,14 +71,22 @@ Fraction<T> operator-(const Fraction<T> &a, const Fraction<T> &b) {
 
 template<typename T>
 Fraction<T> operator*(const Fraction<T> &a, const Fraction<T> &b) {
-    Fraction<T> result(a.numerator() * b.numerator(), a.denominator() * b.denominator());
+    using SA = SafeArithmetics<T>;
+    Fraction<T> result(
+        SA::multiply(a.numerator(), b.numerator()),
+        SA::multiply(a.denominator(), b.denominator())
+    );
     result.reduce();
     return result;
 }
 
 template<typename T>
 Fraction<T> operator/(const Fraction<T> &a, const Fraction<T> &b) {
-    Fraction<T> result(a.numerator() * b.denominator(), a.denominator() * b.numerator());
+    using SA = SafeArithmetics<T>;
+    Fraction<T> result(
+        SA::multiply(a.numerator(), b.denominator()),
+        SA::multiply(a.denominator(), b.numerator())
+    );
     result.reduce();
     return result;
 }

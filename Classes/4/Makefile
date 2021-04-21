@@ -3,6 +3,12 @@ all: a.out
 
 OS := $(shell uname -o)
 
+CFLAGS :=
+
+ifeq ($(COVERAGE),1)
+	CFLAGS += --coverage
+endif
+
 googletest-build:
 	ifeq ($(OS),Msys)
 		cmake -G 'Unix Makefiles' -B googletest-build -DCMAKE_MAKE_PROGRAM=C:\Users\utkin.n\mingw\bin\make.exe ../../googletest
@@ -11,5 +17,13 @@ googletest-build:
 	endif
 	$(MAKE) -C googletest-build
 
-a.out: gtest.cpp Fraction.hpp | googletest-build
-	g++ -o a.out -g -I../../googletest/googletest/include -Lgoogletest-build/lib gtest.cpp -lpthread -lgtest -lgtest_main
+SOURCES := gtest.cpp test_SafeArithmetics.cpp test_Fraction.cpp
+HEADERS := Fraction.hpp SafeArithmetics.hpp
+
+a.out: $(SOURCES) $(HEADERS) | googletest-build
+	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -Lgoogletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
+
+.PHONY: coverage
+coverage:
+	@mkdir -p coverage
+	gcovr -o coverage/coverage.html --html-details
