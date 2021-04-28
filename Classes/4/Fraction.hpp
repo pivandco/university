@@ -23,6 +23,8 @@ static T gcd(T a, T b) {
 template<typename T>
 class Fraction {
 public:
+    Fraction() = default;
+
     Fraction(T numerator, T denominator) : _numerator(numerator), _denominator(denominator) {
         if (!_denominator)
             throw std::domain_error("denominator is 0");
@@ -50,7 +52,7 @@ public:
     }
 
 private:
-    T _numerator, _denominator;
+    T _numerator = 0, _denominator = 1;
 };
 
 template<typename T>
@@ -92,6 +94,20 @@ Fraction<T> operator/(const Fraction<T> &a, const Fraction<T> &b) {
 }
 
 template <typename T>
-std::ostream &operator<<(std::ostream s, const Fraction<T> &frac) {
+std::ostream &operator<<(std::ostream &s, const Fraction<T> &frac) {
     return s << frac.to_string();
+}
+
+template <typename T>
+std::istream &operator>>(std::istream &s, Fraction<T> &frac) {
+    T num = 0, denom = 0;
+    std::cout << "Числитель: ";
+    s >> num;
+    while (denom == 0) {
+        std::cout << "Знаменатель: ";
+        s >> denom;
+    }
+
+    frac = Fraction<T>(num, denom);
+    return s;
 }

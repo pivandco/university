@@ -1,5 +1,5 @@
 all: a.out
-	./a.out --gtest_color=yes
+	./a.out
 
 OS := $(shell uname -o)
 
@@ -21,7 +21,7 @@ SOURCES := gtest.cpp test_SafeArithmetics.cpp test_Fraction.cpp
 HEADERS := Fraction.hpp SafeArithmetics.hpp
 
 a.out: $(SOURCES) $(HEADERS) | googletest-build
-	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -Lgoogletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
+	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -I../../ -Lgoogletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
 
 .PHONY: coverage
 coverage:

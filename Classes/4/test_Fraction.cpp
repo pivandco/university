@@ -37,6 +37,7 @@ TEST(Fraction, zero_denominator) {
 
 TEST(Fraction, add) {
     EXPECT_FRAC_EQ(Fraction<int>(2, 3) + Fraction<int>(2, 6), 1, 1);
+    EXPECT_FRAC_EQ(Fraction<int>(1, 2) + Fraction<int>(0, 3), 1, 2);
 }
 
 TEST(Fraction, add_overflow) {
@@ -82,8 +83,13 @@ TEST(Fraction, to_string) {
     EXPECT_EQ(Fraction<int>(-1, -3).to_string(), "1/3");
 }
 
-TEST(Fraction, DISABLED_to_string_zero) {
-    EXPECT_EQ(Fraction<int>(-0, 3).to_string(), "0");
+// ÿ”≈ œœÿ I/O ¬ ﬁÕ»“ “≈—“¿’ –Œ‘À¿Õ ≈¡¿ÀŒ
+TEST(Fraction, input) {
+    setlocale(LC_ALL, "Russian");
+    Fraction<int> f;
+    std::cin >> f;
+
+    std::cout << "¬˚ ‚‚ÂÎË " << f << std::endl;
 }
 
 #undef EXPECT_FRAC_EQ
