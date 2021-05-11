@@ -1,4 +1,0 @@
-*.exe
-a.out
-.gdb_history
-googletest-build
