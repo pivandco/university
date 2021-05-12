@@ -3,7 +3,7 @@ using static System.Math;
 
 namespace Basic
 {
-    class Basic
+    class Program
     {
         static void Main(string[] args)
         {
@@ -59,5 +59,4 @@ namespace Basic
             }
         }
     }
-
 }
