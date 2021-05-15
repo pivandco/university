@@ -25,7 +25,7 @@ namespace Basic
                 Console.WriteLine("Введены некорректные данные");
             }
 
-            //for example: 25-3-4
+            // for example: 25-3-4
             Console.WriteLine("6. Разложение");
             input = Console.ReadLine();
             if (int.TryParse(input, out int n))
@@ -48,7 +48,7 @@ namespace Basic
             var minutes = inSeconds / 60 % 60;
             var hours = inSeconds / 3600 % 24;
             var days = inSeconds / 3600 / 24;
-            return $"{days}d {hours}d {minutes}m {seconds}d";
+            return $"{days}d {hours}d {minutes}m {seconds}s";
         }
 
         private static double LotOfSeeds()
