@@ -6,10 +6,6 @@ using namespace std;
 
 void list_print(List p)
 {
-    if (!p) {
-        // printf("Пустой список\n");
-        return;
-    }
     while (p)
     {
         printf("%d ", p->key);
@@ -25,9 +21,6 @@ void list_prepend(List &p, int key)
 
 List list_find(List p, int key)
 {
-    if (!p) {
-        return nullptr;
-    }
     while (p && p->key != key)
         p = p->next;
     return p;
