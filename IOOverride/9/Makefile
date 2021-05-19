@@ -17,8 +17,16 @@ googletest-build:
 	endif
 	$(MAKE) -C googletest-build
 
-SOURCES := ClassJournal.cpp gtest.cpp
-HEADERS := ClassJournal.hpp
+SOURCES := \
+	AppState.cpp \
+	ClassJournal.cpp \
+	commands.cpp \
+	main.cpp
+
+HEADERS := \
+	AppState.hpp \
+	commands.hpp \
+	ClassJournal.hpp
 
 a.out: $(SOURCES) $(HEADERS) | googletest-build
 	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -I../../ -Lgoogletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
