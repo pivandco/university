@@ -4,7 +4,7 @@
 
 #include "AppState.hpp"
 
-class App {
+class CLI {
 public:
     void command_loop();
 

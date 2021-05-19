@@ -5,7 +5,6 @@
 #include "AppState.hpp"
 
 using CommandCallback = void (*)(AppState &);
-
 struct Command {
     const char *help;
     CommandCallback callback;

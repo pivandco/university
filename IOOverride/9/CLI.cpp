@@ -1,4 +1,4 @@
-#include "App.hpp"
+#include "CLI.hpp"
 
 #include <iostream>
 
@@ -9,24 +9,22 @@ using std::endl;
 using std::out_of_range;
 using std::string;
 
-void App::command_loop() {
+void CLI::command_loop() {
     while (true) {
-        CommandCallback callback = ask_command();
-        callback(state);
+        Command cmd = ask_command();
+        cmd.callback(state);
     }
 }
 
-static CommandCallback ask_command() {
-    string cmd_str = ask_command_string();
-    CommandCallback callback = nullptr;
-    while (!callback) {
+static const Command &ask_command() {
+    while (true) {
+        string cmd_str = ask_command_string();
         try {
-            callback = COMMANDS.at(cmd_str.c_str());
+            return COMMANDS.at(cmd_str.c_str());
         } catch (out_of_range) {
             cout << "Неизвестная команда: " << cmd_str << endl;
         }
     }
-    return callback;
 }
 
 static string ask_command_string() {

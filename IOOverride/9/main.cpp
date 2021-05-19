@@ -1,7 +1,7 @@
-#include "App.hpp"
+#include "CLI.hpp"
 
 int main() {
-    App app;
-    app.command_loop();
+    CLI cli;
+    cli.command_loop();
     return 0;
 }
