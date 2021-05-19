@@ -44,6 +44,7 @@ TEST(DynArray, IO) {
     out.open(FILENAME, std::ios::out);
     out << arr_out;
     out.close();
+
     std::ifstream in;
     in.open(FILENAME, std::ios::in);
     in >> arr_in;

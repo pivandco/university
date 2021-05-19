@@ -29,13 +29,11 @@ struct DynArray {
 template<typename T>
 std::ostream &operator<<(std::ostream &out, const DynArray<T> &arr) {
     out.write(reinterpret_cast<const char *>(&arr.size), sizeof(arr.size));
-    return out.write(reinterpret_cast<char *>(arr.array), arr.size * sizeof(T));
+    return out.write(reinterpret_cast<const char *>(&arr.array), sizeof(arr.array));
 }
 
 template<typename T>
 std::istream &operator>>(std::istream &in, DynArray<T> &arr) {
-    size_t size;
-    in.read(reinterpret_cast<char *>(&size), sizeof(size));
-    arr.resize(size);
-    return in.read(reinterpret_cast<char *>(arr.array), arr.size * sizeof(T));
+    in.read(reinterpret_cast<char *>(&arr.size), sizeof(arr.size));
+    return in.read(reinterpret_cast<char *>(&arr.array), sizeof(arr.array));
 }
