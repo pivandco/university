@@ -1,0 +1,81 @@
+@startuml IO_Override_9
+
+hide empty members
+remove FileIsEmptyException
+
+class App {
+    - cli: CLI
+    - state: AppState
+}
+App *-- CLI
+App *-- AppState
+
+together {
+    class CLI {
+        + Command get_command()
+    }
+    ' App ..> Command : получает
+    CLI::get_command ..> Command
+
+    class AppState <<(S,lightgreen) struct>> {
+        + ClassJournal *current_journal = nullptr
+
+        + ~AppState()
+    }
+    AppState *-- ClassJournal
+}
+
+
+class Command <<(S,lightgreen) struct>> {
+    + const char *help
+    + void (*command_callback)(AppState &)
+}
+note bottom : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
+Command::command_callback ..> AppState : модифицирует
+Command ..> ClassJournalFile
+
+together {
+    class ClassJournalFile {
+        - std::string name
+
+        + ClassJournalFile(std::string name)
+        + ClassJournal load()
+        + save(const ClassJournal &journal)
+    }
+    ClassJournalFile .left.> ClassJournal
+
+    class FileIsEmptyException <<(E,red) exception>>
+    FileIsEmptyException <. ClassJournalFile::load
+
+    class ClassJournal <<(S,lightgreen) struct>> {
+        + std::string name
+        + std::vector<Lesson> lessons = {}
+
+        + ClassJournal(std::string name)
+        ' .. Переопределение I/O ..
+        ' + std::istream operator>>(std::istream in)
+        ' + std::ostream operator<<(std::ostream out)
+    }
+    ClassJournal "1" *-- "*" Lesson
+}
+
+class Lesson <<(S,lightgreen) struct>> {
+    + std::string topic
+    + Date date
+    + std::map<char *, int> marks
+    ' .. Переопределение I/O ..
+    ' + std::istream operator>>(std::istream in)
+    ' + std::ostream operator<<(std::ostream out)
+}
+Lesson *-- Date
+
+class Date <<(S,lightgreen) struct>> {
+    + int day
+    + int month
+    + int year
+    ' .. Переопределение I/O ..
+    ' + std::istream operator>>(std::istream in)
+    ' + std::ostream operator<<(std::ostream out)
+}
+
+@enduml
