@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <vector>
 
 template<typename T> void bin_read(std::istream &in, T &obj) {
     in.read(reinterpret_cast<char *>(&obj), sizeof(obj));

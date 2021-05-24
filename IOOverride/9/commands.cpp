@@ -107,7 +107,7 @@ const std::map<string, Command> COMMANDS = {
 static string ask_filename() {
     cout << "Введите название файла или нажмите Enter для отмены\n>> ";
     string filename;
-    cin >> filename;
+    getline(cin, filename);
     return filename;
 }
 

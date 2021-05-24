@@ -14,6 +14,9 @@ static string ask_command_string();
 const Command CLI::get_command() {
     while (true) {
         string cmd_str = ask_command_string();
+        if (cmd_str.empty()) {
+            return;
+        }
         try {
             return COMMANDS.at(cmd_str);
         } catch (out_of_range) {
@@ -25,7 +28,7 @@ const Command CLI::get_command() {
 static string ask_command_string() {
     cout << "> ";
     string command;
-    cin >> command;
+    getline(cin, command);
     if (cin.eof()) {
         exit(0);
     }
