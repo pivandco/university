@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <map>
 
 #include "AppState.hpp"
@@ -10,4 +11,4 @@ struct Command {
     CommandCallback callback;
 };
 
-extern const std::map<const char *, Command> COMMANDS;
+extern const std::map<std::string, Command> COMMANDS;

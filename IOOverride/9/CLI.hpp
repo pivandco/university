@@ -2,12 +2,9 @@
 
 #include <string>
 
-#include "AppState.hpp"
+#include "commands.hpp"
 
 class CLI {
 public:
-    void command_loop();
-
-private:
-    AppState state;
+    const Command get_command();
 };

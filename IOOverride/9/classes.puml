@@ -2,29 +2,31 @@
 
 hide empty members
 remove FileIsEmptyException
+set namespaceSeparator none
 
 class App {
-    - cli: CLI
     - state: AppState
+    - cli: CLI
+
+    + void loop()
 }
 App *-- CLI
 App *-- AppState
 
 together {
     class CLI {
-        + Command get_command()
+        + const Command get_command()
     }
     ' App ..> Command : получает
     CLI::get_command ..> Command
 
     class AppState <<(S,lightgreen) struct>> {
-        + ClassJournal *current_journal = nullptr
+        + ClassJournalFile *journal_file = nullptr
 
         + ~AppState()
     }
-    AppState *-- ClassJournal
+    AppState *-- ClassJournalFile
 }
-
 
 class Command <<(S,lightgreen) struct>> {
     + const char *help
@@ -32,50 +34,63 @@ class Command <<(S,lightgreen) struct>> {
 }
 note bottom : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
 Command::command_callback ..> AppState : модифицирует
-Command ..> ClassJournalFile
 
-together {
-    class ClassJournalFile {
-        - std::string name
+class ClassJournalFile {
+    + std::string name
+    - std::optional<ClassJournal> journal
+    - bool _has_unsaved_changes = false
 
-        + ClassJournalFile(std::string name)
-        + ClassJournal load()
-        + save(const ClassJournal &journal)
-    }
-    ClassJournalFile .left.> ClassJournal
-
-    class FileIsEmptyException <<(E,red) exception>>
-    FileIsEmptyException <. ClassJournalFile::load
-
-    class ClassJournal <<(S,lightgreen) struct>> {
-        + std::string name
-        + std::vector<Lesson> lessons = {}
-
-        + ClassJournal(std::string name)
-        ' .. Переопределение I/O ..
-        ' + std::istream operator>>(std::istream in)
-        ' + std::ostream operator<<(std::ostream out)
-    }
-    ClassJournal "1" *-- "*" Lesson
+    + ClassJournalFile(std::string name)
+    + const ClassJournal &get_journal()
+    + ClassJournal &get_journal_and_mark_changed()
+    + void save()
+    + bool has_unsaved_changes() const
+    + bool exists_on_disk() const
 }
+ClassJournalFile *-- ClassJournal
+
+class FileIsEmptyException <<(E,red) exception>>
+FileIsEmptyException <. ClassJournalFile::load
+
+class ClassJournal <<(S,lightgreen) struct>> {
+    + std::string name
+    + std::vector<Lesson> lessons
+
+    + std::string to_string() const
+    + std::istream operator>>(std::istream in)
+    + std::ostream operator<<(std::ostream out)
+}
+ClassJournal "1" *- "*" Lesson
 
 class Lesson <<(S,lightgreen) struct>> {
     + std::string topic
     + Date date
     + std::map<char *, int> marks
-    ' .. Переопределение I/O ..
-    ' + std::istream operator>>(std::istream in)
-    ' + std::ostream operator<<(std::ostream out)
+
+    + std::string to_string() const
+    + std::istream operator>>(std::istream in)
+    + std::ostream operator<<(std::ostream out)
 }
-Lesson *-- Date
+Lesson *- Date
 
 class Date <<(S,lightgreen) struct>> {
-    + int day
-    + int month
-    + int year
-    ' .. Переопределение I/O ..
-    ' + std::istream operator>>(std::istream in)
-    ' + std::ostream operator<<(std::ostream out)
+    + int day = 0
+    + int month = 0
+    + int year = 0
+
+    + std::string to_string() const
+    + std::istream operator>>(std::istream in)
+    + std::ostream operator<<(std::ostream out)
 }
+
+class binary_io.hpp <<(F,white) file>> {
+    + template<typename T> void bin_read(std::istream &in, T &obj);
+    + template<typename T> void bin_write(std::ostream &out, const T &obj);
+
+    + {method} ... специализации шаблонов ...
+}
+binary_io.hpp <.. ClassJournal
+binary_io.hpp <.. Lesson
+binary_io.hpp <.. Date
 
 @enduml
