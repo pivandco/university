@@ -17,7 +17,7 @@ const Command CLI::get_command() {
         try {
             return COMMANDS.at(cmd_str);
         } catch (out_of_range) {
-            cout << "Íåèçâåñòíàÿ êîìàíäà: " << cmd_str << endl;
+            cout << "ÐÐµÐ¸Ð·Ð²ÐµÑÑ‚Ð½Ð°Ñ ÐºÐ¾Ð¼Ð°Ð½Ð´Ð°: " << cmd_str << endl;
         }
     }
 }

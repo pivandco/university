@@ -13,12 +13,12 @@ static string ask_filename();
 static bool check_file_saved(optional<ClassJournalFile> &);
 /* #endregion */
 
-const string FILE_NOT_OPEN = "Файл не открыт.\n";
+const string FILE_NOT_OPEN = "Р¤Р°Р№Р» РЅРµ РѕС‚РєСЂС‹С‚.\n";
 
 const std::map<string, Command> COMMANDS = {
     {
         "help", {
-            "Выводит список доступных команд и их описание.",
+            "Р’С‹РІРѕРґРёС‚ СЃРїРёСЃРѕРє РґРѕСЃС‚СѓРїРЅС‹С… РєРѕРјР°РЅРґ Рё РёС… РѕРїРёСЃР°РЅРёРµ.",
             [] (AppState &app) {
                 for (auto &[cmd_name, cmd] : COMMANDS) {
                     cout << cmd_name << " - " << cmd.help << endl;
@@ -28,7 +28,7 @@ const std::map<string, Command> COMMANDS = {
     },
     {
         "new", {
-            "Создает новый журнал.",
+            "РЎРѕР·РґР°РµС‚ РЅРѕРІС‹Р№ Р¶СѓСЂРЅР°Р».",
             [] (AppState &app) {
                 string filename = ask_filename();
                 if (filename.empty()) {
@@ -40,20 +40,20 @@ const std::map<string, Command> COMMANDS = {
     },
     {
         "fileinfo", {
-            "Выводит информацию о файле текущего открытого журнала.",
+            "Р’С‹РІРѕРґРёС‚ РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ С„Р°Р№Р»Рµ С‚РµРєСѓС‰РµРіРѕ РѕС‚РєСЂС‹С‚РѕРіРѕ Р¶СѓСЂРЅР°Р»Р°.",
             [] (AppState &app) {
                 if (!app.journal_file.has_value()) {
                     cout << FILE_NOT_OPEN;
                     return;
                 }
-                cout << "Имя файла:\t\t" << app.journal_file->name << endl
-                     << "Несохр. изменения:\t" << (app.journal_file->has_unsaved_changes() ? "Да" : "Нет") << endl;
+                cout << "РРјСЏ С„Р°Р№Р»Р°:\t\t" << app.journal_file->name << endl
+                     << "РќРµСЃРѕС…СЂ. РёР·РјРµРЅРµРЅРёСЏ:\t" << (app.journal_file->has_unsaved_changes() ? "Р”Р°" : "РќРµС‚") << endl;
             }
         }
     },
     {
         "save", {
-            "Сохраняет журнал в файл.",
+            "РЎРѕС…СЂР°РЅСЏРµС‚ Р¶СѓСЂРЅР°Р» РІ С„Р°Р№Р».",
             [] (AppState &app) {
                 if (!app.journal_file.has_value()) {
                     cout << FILE_NOT_OPEN;
@@ -65,7 +65,7 @@ const std::map<string, Command> COMMANDS = {
     },
     {
         "close", {
-            "Закрывает журнал.",
+            "Р—Р°РєСЂС‹РІР°РµС‚ Р¶СѓСЂРЅР°Р».",
             [] (AppState &app) {
                 if (!check_file_saved(app.journal_file)) {
                     return;
@@ -76,7 +76,7 @@ const std::map<string, Command> COMMANDS = {
     },
     {
         "close!", {
-            "Принудительно закрывает журнал без сохранения.",
+            "РџСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕ Р·Р°РєСЂС‹РІР°РµС‚ Р¶СѓСЂРЅР°Р» Р±РµР· СЃРѕС…СЂР°РЅРµРЅРёСЏ.",
             [] (AppState &app) {
                 app.journal_file.reset();
             }
@@ -84,7 +84,7 @@ const std::map<string, Command> COMMANDS = {
     },
     {
         "load", {
-            "Загружает журнал из файла.",
+            "Р—Р°РіСЂСѓР¶Р°РµС‚ Р¶СѓСЂРЅР°Р» РёР· С„Р°Р№Р»Р°.",
             [] (AppState &app) {
                 if (!check_file_saved(app.journal_file)) {
                     return;
@@ -95,7 +95,7 @@ const std::map<string, Command> COMMANDS = {
                 }
                 ClassJournalFile file(filename);
                 if (!file.exists_on_disk()) {
-                    cout << "Файла не существует.";
+                    cout << "Р¤Р°Р№Р»Р° РЅРµ СЃСѓС‰РµСЃС‚РІСѓРµС‚.";
                     return;
                 }
                 *app.journal_file = file;
@@ -105,7 +105,7 @@ const std::map<string, Command> COMMANDS = {
 };
 
 static string ask_filename() {
-    cout << "Введите название файла или нажмите Enter для отмены\n>> ";
+    cout << "Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ С„Р°Р№Р»Р° РёР»Рё РЅР°Р¶РјРёС‚Рµ Enter РґР»СЏ РѕС‚РјРµРЅС‹\n>> ";
     string filename;
     cin >> filename;
     return filename;
@@ -116,7 +116,7 @@ static bool check_file_saved(optional<ClassJournalFile> &file) {
         return true;
     }
     if (file->has_unsaved_changes()) {
-        cout << "Есть несохраненные изменения.\nИспользуйте \"save\" для сохранения, или \"close!\" для принудительного закрытия.\n";
+        cout << "Р•СЃС‚СЊ РЅРµСЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РёР·РјРµРЅРµРЅРёСЏ.\nРСЃРїРѕР»СЊР·СѓР№С‚Рµ \"save\" РґР»СЏ СЃРѕС…СЂР°РЅРµРЅРёСЏ, РёР»Рё \"close!\" РґР»СЏ РїСЂРёРЅСѓРґРёС‚РµР»СЊРЅРѕРіРѕ Р·Р°РєСЂС‹С‚РёСЏ.\n";
         return false;
     }
     return true;
