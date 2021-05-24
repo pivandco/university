@@ -21,9 +21,7 @@ together {
     CLI::get_command ..> Command
 
     class AppState <<(S,lightgreen) struct>> {
-        + ClassJournalFile *journal_file = nullptr
-
-        + ~AppState()
+        + std::optional<ClassJournalFile> journal_file;
     }
     AppState *-- ClassJournalFile
 }
@@ -32,35 +30,37 @@ class Command <<(S,lightgreen) struct>> {
     + const char *help
     + void (*command_callback)(AppState &)
 }
-note bottom : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
+note top : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
 Command::command_callback ..> AppState : модифицирует
 
-class ClassJournalFile {
-    + std::string name
-    - std::optional<ClassJournal> journal
-    - bool _has_unsaved_changes = false
+together {
+    class ClassJournalFile {
+        + std::string name
+        - std::optional<ClassJournal> journal
+        - bool _has_unsaved_changes = false
 
-    + ClassJournalFile(std::string name)
-    + const ClassJournal &get_journal()
-    + ClassJournal &get_journal_and_mark_changed()
-    + void save()
-    + bool has_unsaved_changes() const
-    + bool exists_on_disk() const
+        + ClassJournalFile(std::string name)
+        + const ClassJournal &get_journal()
+        + ClassJournal &get_journal_and_mark_changed()
+        + void save()
+        + bool has_unsaved_changes() const
+        + bool exists_on_disk() const
+    }
+    ClassJournalFile *-- ClassJournal
+
+    class ClassJournal <<(S,lightgreen) struct>> {
+        + std::string name
+        + std::vector<Lesson> lessons
+
+        + std::string to_string() const
+        + std::istream operator>>(std::istream in)
+        + std::ostream operator<<(std::ostream out)
+    }
+    ClassJournal "1" *- "*" Lesson
 }
-ClassJournalFile *-- ClassJournal
 
 class FileIsEmptyException <<(E,red) exception>>
 FileIsEmptyException <. ClassJournalFile::load
-
-class ClassJournal <<(S,lightgreen) struct>> {
-    + std::string name
-    + std::vector<Lesson> lessons
-
-    + std::string to_string() const
-    + std::istream operator>>(std::istream in)
-    + std::ostream operator<<(std::ostream out)
-}
-ClassJournal "1" *- "*" Lesson
 
 class Lesson <<(S,lightgreen) struct>> {
     + std::string topic
