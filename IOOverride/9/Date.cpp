@@ -2,12 +2,20 @@
 
 #include <iomanip>
 #include <sstream>
+#include <regex>
 
 #include "binary_io.hpp"
 
 using std::string;
 using std::stringstream;
 using std::setfill, std::setw;
+using std::regex;
+
+const regex DATE_REGEX("\\d{1,2}\\.\\d{1,2}\\.\\d{4}");
+
+Date Date::from_string() {
+    // TODO
+}
 
 string Date::to_string() const {
     stringstream ss;

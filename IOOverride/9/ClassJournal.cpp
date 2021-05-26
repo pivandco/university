@@ -1,14 +1,33 @@
 #include "ClassJournal.hpp"
 
-#include "binary_io.hpp"
+#include <sstream>
 
-std::istream &operator>>(std::istream &in, ClassJournal &journal) {
+#include "binary_io.hpp"
+#include "printing.hpp"
+
+using std::istream, std::ostream;
+using std::string;
+using std::stringstream;
+using std::endl;
+
+string ClassJournal::to_string() const {
+    stringstream ss;
+    ss << "Журнал \"" << name << "\"\n"
+       << BAR << endl;
+    for (size_t i = 0; i < lessons.size(); i++) {
+        ss << "№" << i + 1 << ": " << lessons[i].to_string_brief();
+    }
+    ss << BAR << endl;
+    return ss.str();
+}
+
+istream &operator>>(istream &in, ClassJournal &journal) {
     bin_read(in, journal.name);
     bin_read(in, journal.lessons);
     return in;
 }
 
-std::ostream &operator<<(std::ostream &out, const ClassJournal &journal) {
+ostream &operator<<(ostream &out, const ClassJournal &journal) {
     bin_write(out, journal.name);
     bin_write(out, journal.lessons);
     return out;

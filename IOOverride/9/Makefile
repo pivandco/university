@@ -30,7 +30,8 @@ HEADERS := \
 	CLI.hpp \
 	commands.hpp \
 	Date.hpp \
-	Lesson.hpp
+	Lesson.hpp \
+	printing.hpp
 
 a.out: $(SOURCES) $(HEADERS) | ../../googletest-build
 	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -I../../ -L../../googletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main

@@ -67,7 +67,8 @@ class Lesson <<(S,lightgreen) struct>> {
     + Date date
     + std::map<char *, int> marks
 
-    + std::string to_string() const
+    + std::string to_string_brief() const
+    + std::string to_string_with_marks() const
     + std::istream operator>>(std::istream in)
     + std::ostream operator<<(std::ostream out)
 }
