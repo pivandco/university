@@ -11,11 +11,13 @@ using std::string;
 
 static string ask_command_string();
 
+const Command NULL_COMMAND = { "", [] (AppState &) {} };
+
 const Command CLI::get_command() {
     while (true) {
         string cmd_str = ask_command_string();
         if (cmd_str.empty()) {
-            return;
+            return NULL_COMMAND;
         }
         try {
             return COMMANDS.at(cmd_str);
