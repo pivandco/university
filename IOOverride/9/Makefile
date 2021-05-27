@@ -1,6 +1,10 @@
 all: uml a.out
 	./a.out
 
+.PHONY: debug
+debug: a.out
+	gdb ./a.out
+
 CFLAGS :=
 
 ifeq ($(COVERAGE),1)

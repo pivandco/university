@@ -4,14 +4,17 @@
 #include <fstream>
 
 using std::ifstream, std::ofstream;
+using std::make_optional;
 
 ClassJournalFile::ClassJournalFile(std::string name) : name(name) {
+    if (exists_on_disk()) {
+        load();
+    } else {
+        journal = make_optional<ClassJournal>();
+    }
 }
 
 const ClassJournal &ClassJournalFile::get_journal() {
-    if (!journal.has_value()) {
-        load();
-    }
     return *journal;
 }
 

@@ -41,7 +41,15 @@ const std::map<string, Command> COMMANDS = {
                 if (filename.empty()) {
                     return;
                 }
-                app.journal_file.emplace(filename);
+
+                ClassJournalFile file(filename);
+                if (file.exists_on_disk()) {
+                    // TODO: ДАНЕТ?
+                }
+                cout << "Название журнала >> ";
+                getline(cin, file.get_journal_and_mark_changed().name);
+
+                app.journal_file = file;
             }
         }
     },
@@ -84,22 +92,44 @@ const std::map<string, Command> COMMANDS = {
         }
     },
     {
+        "exit", {
+            "Выход из программы.",
+            [] (AppState &app) {
+                if (!check_file_saved(app.journal_file)) {
+                    return;
+                }
+                exit(0);
+            }
+        }
+    },
+    {
+        "exit!", {
+            "Принудительный выход из программы.",
+            [] (AppState &app) {
+                exit(0);
+            }
+        }
+    },
+    {
         "load", {
             "Загружает журнал из файла.",
             [] (AppState &app) {
                 if (!check_file_saved(app.journal_file)) {
                     return;
                 }
-                string filename = ask_filename();
-                if (filename.empty()) {
-                    return;
+                while (true) {
+                    string filename = ask_filename();
+                    if (filename.empty()) {
+                        return;
+                    }
+                    ClassJournalFile file(filename);
+                    if (!file.exists_on_disk()) {
+                        cout << "Файла не существует.\n";
+                        continue;
+                    }
+                    app.journal_file = file;
+                    break;
                 }
-                ClassJournalFile file(filename);
-                if (!file.exists_on_disk()) {
-                    cout << "Файла не существует.";
-                    return;
-                }
-                *app.journal_file = file;
             }
         }
     },
@@ -122,7 +152,7 @@ const std::map<string, Command> COMMANDS = {
                     int lesson_id;
                     cin >> lesson_id;
                     try {
-                        cout << app.journal_file->get_journal().lessons[lesson_id + 1].to_string_with_marks() << endl;
+                        cout << app.journal_file->get_journal().lessons.at(lesson_id - 1).to_string_with_marks() << endl;
                         break;
                     } catch(out_of_range) {
                         cout << "Неверный номер занятия: " << lesson_id << endl;
@@ -138,9 +168,26 @@ const std::map<string, Command> COMMANDS = {
                 RETURN_IF_JOURNAL_NOT_OPEN()
 
                 Lesson lesson;
+
+                // аааааАААААААААА
+                // ПРИШЛО ВРЕМЯ РЕФАААААКТОРИИИИИИТЬ
+                // КОД САМ СЕБЯ НЕ ОТРЕФАКТОРИТ
+                // ОТРЕФАКТОРЬ ЕГО ЕЩЕ РАЗ
+                // https://www.youtube.com/watch?v=AtaeWm8Am6Y
                 cout << "Название занятия >> ";
                 getline(cin, lesson.topic);
-                
+                while (true) {
+                    cout << "Дата занятия в формате дд.мм.гггг >>";
+                    string date_str;
+                    getline(cin, date_str);
+                    try {
+                        lesson.date = Date::from_string(date_str);
+                        break;
+                    } catch (BadDateException) {
+                        cout << "Неверная дата: " << date_str << endl;
+                    }
+                }
+                app.journal_file->get_journal_and_mark_changed().lessons.push_back(lesson);
             }
         }
     }

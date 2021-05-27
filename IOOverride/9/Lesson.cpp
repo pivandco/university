@@ -12,7 +12,7 @@ using std::endl;
 
 string Lesson::to_string_brief() const {
     stringstream ss;
-    ss << "Занятие " << date.to_string() << ": " << topic << endl;
+    ss << "Занятие " << date.to_string() << ": " << topic << ", оценок: " << marks.size() << endl;
     return ss.str();
 }
 

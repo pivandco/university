@@ -6,15 +6,18 @@
 
 #include "binary_io.hpp"
 
-using std::string;
+using std::string, std::stoi;
 using std::stringstream;
 using std::setfill, std::setw;
-using std::regex;
+using std::regex, std::smatch, std::regex_match;
 
-const regex DATE_REGEX("\\d{1,2}\\.\\d{1,2}\\.\\d{4}");
-
-Date Date::from_string() {
-    // TODO
+Date Date::from_string(const string &date_string) {
+    const regex DATE_REGEX("(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})");
+    smatch match;
+    if (!regex_match(date_string, match, DATE_REGEX)) {
+        throw BadDateException(date_string);
+    }
+    return Date { stoi(match[0]), stoi(match[1]), stoi(match[2]) };
 }
 
 string Date::to_string() const {
