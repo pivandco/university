@@ -4,57 +4,88 @@ hide empty members
 remove FileIsEmptyException
 set namespaceSeparator none
 
-class App {
-    - state: AppState
-    - cli: CLI
+' class main.cpp <<(F,white) file>> {
+'     App app
+'     int main()
+' }
+' main.cpp::app *-- App
+' main.cpp::main ..> CommandRegistry
+' main.cpp::main ..> command_sets
 
+class App {
+    - AppState state
+    - CLI cli
+
+    + App()
     + void loop()
 }
 App *-- CLI
 App *-- AppState
 
+class CLI {
+    + CLI()
+    + Command get_command()
+
+    - CommandRegistry cmdreg
+}
+CLI ..> CommandRegistry
+CLI ..> command_sets
+
+class AppState <<(S,lightgreen) struct>> {
+    + optional<ClassJournalFile> journal_file
+    + consume_callback(void (*cmd)(AppState &))
+}
+AppState *-- ClassJournalFile
+
 together {
-    class CLI {
-        + const Command get_command()
+    class Command <<(S,lightgreen) struct>> {
+        + const char *help
+        + void (*command_callback)(AppState &)
     }
-    ' App ..> Command : получает
-    CLI::get_command ..> Command
+    Command ..> AppState
 
-    class AppState <<(S,lightgreen) struct>> {
-        + std::optional<ClassJournalFile> journal_file;
+    class CommandRegistry <<singleton>> {
+        - {static} CommandRegistry instance
+        - map<string, Command> _commands
+
+        + {static} CommandRegistry get()
+        + void add_command_set(map<string, Command> commands)
+        + const Command find_command(string name) const
+        + CommandSet commands()
     }
-    AppState *-- ClassJournalFile
-}
+    CommandRegistry o- "*" Command
 
-class Command <<(S,lightgreen) struct>> {
-    + const char *help
-    + void (*command_callback)(AppState &)
+    class command_sets<<(N,blue) namespace>> {
+        map<string, Command> FILE
+        map<string, Command> MISC
+        map<string, Command> MODEL
+    }
+    command_sets ..|> Command
 }
-note top : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
-Command::command_callback ..> AppState : модифицирует
+' note top : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
 
 together {
     class ClassJournalFile {
-        + std::string name
-        - std::optional<ClassJournal> journal
+        + string name
+        - optional<ClassJournal> _journal
         - bool _has_unsaved_changes = false
 
-        + ClassJournalFile(std::string name)
-        + const ClassJournal &get_journal()
-        + ClassJournal &get_journal_and_mark_changed()
-        + void save()
-        + bool has_unsaved_changes() const
-        + bool exists_on_disk() const
+        + ClassJournalFile(string name)
+        + const ClassJournal journal()
+        + ClassJournal writable_journal()
+        + save()
+        + bool has_unsaved_changes()
+        + bool exists_on_disk()
     }
     ClassJournalFile *-- ClassJournal
 
     class ClassJournal <<(S,lightgreen) struct>> {
-        + std::string name
-        + std::vector<Lesson> lessons
+        + string name
+        + vector<Lesson> lessons
 
-        + std::string to_string() const
-        + std::istream operator>>(std::istream in)
-        + std::ostream operator<<(std::ostream out)
+        + string to_string() const
+        + istream operator>>(istream in)
+        + ostream operator<<(ostream out)
     }
     ClassJournal "1" *- "*" Lesson
 }
@@ -63,14 +94,14 @@ class FileIsEmptyException <<(E,red) exception>>
 FileIsEmptyException <. ClassJournalFile::load
 
 class Lesson <<(S,lightgreen) struct>> {
-    + std::string topic
+    + string topic
     + Date date
-    + std::map<char *, int> marks
+    + map<char *, int> marks
 
-    + std::string to_string_brief() const
-    + std::string to_string_with_marks() const
-    + std::istream operator>>(std::istream in)
-    + std::ostream operator<<(std::ostream out)
+    + string to_string_brief()
+    + string to_string_with_marks()
+    + istream operator>>(istream in)
+    + ostream operator<<(ostream out)
 }
 Lesson *- Date
 
@@ -79,14 +110,15 @@ class Date <<(S,lightgreen) struct>> {
     + int month = 0
     + int year = 0
 
-    + std::string to_string() const
-    + std::istream operator>>(std::istream in)
-    + std::ostream operator<<(std::ostream out)
+    + {static} Date from_string(string date_str)
+    + string to_string()
+    + istream operator>>(istream in)
+    + ostream operator<<(ostream out)
 }
 
 class binary_io.hpp <<(F,white) file>> {
-    + template<typename T> void bin_read(std::istream &in, T &obj);
-    + template<typename T> void bin_write(std::ostream &out, const T &obj);
+    + bin_read<T>(istream in, T &obj)
+    + bin_write<T>(ostream out, T &obj)
 
     + {method} ... специализации шаблонов ...
 }

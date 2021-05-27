@@ -5,7 +5,7 @@ all: uml a.out
 debug: a.out
 	gdb ./a.out
 
-CFLAGS :=
+CFLAGS := -g
 
 ifeq ($(COVERAGE),1)
 	CFLAGS += --coverage
@@ -15,30 +15,44 @@ endif
 	cd ../.. && ./build-googletest.sh
 
 SOURCES := \
+	command_sets/_util.cpp \
+	command_sets/file.cpp \
+	command_sets/misc.cpp \
+	command_sets/model.cpp \
 	App.cpp \
 	AppState.cpp \
 	ClassJournal.cpp \
 	ClassJournalFile.cpp \
 	CLI.cpp \
-	commands.cpp \
+	CommandRegistry.cpp \
 	Date.cpp \
 	Lesson.cpp \
 	main.cpp
 
 HEADERS := \
+	command_sets/_util.hpp \
+	command_sets/file.hpp \
+	command_sets/misc.hpp \
+	command_sets/model.hpp \
 	App.hpp \
 	AppState.hpp \
 	binary_io.hpp \
 	ClassJournal.hpp \
 	ClassJournalFile.hpp \
 	CLI.hpp \
-	commands.hpp \
+	Command.hpp \
+	CommandRegistry.hpp \
 	Date.hpp \
 	Lesson.hpp \
 	printing.hpp
 
-a.out: $(SOURCES) $(HEADERS) | ../../googletest-build
-	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -I../../ -L../../googletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
+OBJECTS := $(SOURCES:.cpp=.o)
+
+a.out: $(OBJECTS) | ../../googletest-build
+	g++ $(CFLAGS) -o $@  -L../../googletest-build/lib $^ -lpthread -lgtest -lgtest_main
+
+%.o: %.cpp
+	g++ $(CFLAGS) -c -o $@ -I../../googletest/googletest/include -I../../ $<
 
 .PHONY: coverage
 coverage:
@@ -49,3 +63,7 @@ coverage:
 uml: IO_Override_9.png
 IO_Override_9.png: classes.puml
 	plantuml $<
+
+.PHONY: clean
+clean:
+	rm -rf *.o a.out
