@@ -11,8 +11,8 @@ static void require_journal_to_be_open(AppState &);
 static string ask_and_abort_if_empty(const string &);
 static void confirm_overwrite();
 static bool yes_no(const string &);
-static bool char_is_y(char);
-static bool char_is_n(char);
+static bool is_y(char);
+static bool is_n(char);
 /* #endregion */
 
 CommandSet command_sets::FILE = {
@@ -121,16 +121,18 @@ static bool yes_no(const string &prompt) {
     cout << prompt << " [y/n] ";
     char input;
     do {
-        cin >> input;
+        string in_str;
+        getline(cin, in_str);
+        input = in_str[0]; 
         cout << endl;
-    } while (!char_is_y(input) && !char_is_n);
-    return char_is_y(input);
+    } while (!is_y(input) && !is_n(input));
+    return is_y(input);
 }
 
-static bool char_is_y(char c) {
-    return c == 'y' || c == 'Y';
+static bool is_y(char c) {
+    return tolower(c) == 'y';
 }
 
-static bool char_is_n(char c) {
-    return c == 'n' || c == 'N';
+static bool is_n(char c) {
+    return tolower(c) == 'n';
 }
