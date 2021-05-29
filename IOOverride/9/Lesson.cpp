@@ -18,9 +18,12 @@ string Lesson::to_string_brief() const {
 
 string Lesson::to_string_with_marks() const {
     stringstream ss;
-    ss << to_string_brief() << endl << BAR << "\nОценки:\n";
+    ss << to_string_brief() << endl << BAR << "\nОценки:";
+    if (marks.empty()) {
+        ss << "\nПусто";
+    }
     for (auto &[student, mark] : marks) {
-        ss << student << " : " << mark << endl;
+        ss << endl << student << " : " << mark;
     }
     return ss.str();
 }

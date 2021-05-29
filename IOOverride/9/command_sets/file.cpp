@@ -101,7 +101,7 @@ static void require_journal_to_be_open(AppState &app) {
 }
 
 static string ask_and_abort_if_empty(const string &prompt) {
-    cout << prompt << "(нажмите Enter для отмены)\n>> ";
+    cout << prompt << " (нажмите Enter для отмены)\n>> ";
     string input;
     getline(cin, input);
     if (input.empty()) {
