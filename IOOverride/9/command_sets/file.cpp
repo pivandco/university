@@ -22,7 +22,7 @@ CommandSet command_sets::FILE = {
             [] (AppState &app) {
                 require_journal_to_be_open(app);
                 cout << "Имя файла:\t\t" << app.journal_file->name << endl
-                     << "Несохр. изменения:\t" << (app.journal_file->has_unsaved_changes() ? "Да" : "Нет") << endl;
+                     << "Несохр. изменения:\t" << (app.journal_file->unsaved() ? "Да" : "Нет") << endl;
             }
         }
     },
@@ -37,7 +37,7 @@ CommandSet command_sets::FILE = {
                     confirm_overwrite();
                 }
                 string journal_name = ask_and_abort_if_empty("Название журнала");
-                file.get_journal_and_mark_changed().name = journal_name;
+                file.writable_journal().name = journal_name;
 
                 app.journal_file = file;
             }

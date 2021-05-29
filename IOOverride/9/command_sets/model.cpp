@@ -18,7 +18,7 @@ CommandSet command_sets::MODEL = {
             "Печатает название журнала, названия и даты занятий.",
             [] (AppState &app) {
                 require_journal_to_be_open(app.journal_file);
-                cout << app.journal_file->get_journal().to_string() << endl;
+                cout << app.journal_file->journal().to_string() << endl;
             }
         }
     },
@@ -27,7 +27,7 @@ CommandSet command_sets::MODEL = {
             "Печатает название, тему занятия, а также оценки, выставленные на нем.",
             [] (AppState &app) {
                 require_journal_to_be_open(app.journal_file);
-                cout << select_lesson(app.journal_file->get_journal().lessons).to_string_with_marks() << endl;
+                cout << select_lesson(app.journal_file->journal().lessons).to_string_with_marks() << endl;
             }
         }
     },
@@ -42,7 +42,7 @@ CommandSet command_sets::MODEL = {
                 cout << "Название занятия >> ";
                 getline(cin, lesson.topic);
                 lesson.date = read_date();
-                app.journal_file->get_journal_and_mark_changed().lessons.push_back(lesson);
+                app.journal_file->writable_journal().lessons.push_back(lesson);
             }
         }
     },
@@ -51,7 +51,7 @@ CommandSet command_sets::MODEL = {
             "Добавляет оценки к занятию.", [] (AppState &app) {
                 require_journal_to_be_open(app.journal_file);
 
-                auto &marks = select_lesson(app.journal_file->get_journal_and_mark_changed().lessons).marks;
+                auto &marks = select_lesson(app.journal_file->writable_journal().lessons).marks;
 
                 while (true) {
                     string student;

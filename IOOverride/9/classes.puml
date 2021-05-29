@@ -68,13 +68,13 @@ together {
     class ClassJournalFile {
         + string name
         - optional<ClassJournal> _journal
-        - bool _has_unsaved_changes = false
+        - bool _unsaved = false
 
         + ClassJournalFile(string name)
         + const ClassJournal journal()
         + ClassJournal writable_journal()
         + save()
-        + bool has_unsaved_changes()
+        + bool unsaved()
         + bool exists_on_disk()
     }
     ClassJournalFile *-- ClassJournal

@@ -10,31 +10,35 @@ ClassJournalFile::ClassJournalFile(std::string name) : name(name) {
     if (exists_on_disk()) {
         load();
     } else {
-        journal = make_optional<ClassJournal>();
+        _journal = make_optional<ClassJournal>();
     }
 }
 
-const ClassJournal &ClassJournalFile::get_journal() {
-    return *journal;
+const ClassJournal &ClassJournalFile::journal() {
+    return *_journal;
 }
 
-ClassJournal &ClassJournalFile::get_journal_and_mark_changed() {
-    _has_unsaved_changes = true;
-    return const_cast<ClassJournal &>(get_journal());
+ClassJournal &ClassJournalFile::writable_journal() {
+    _unsaved = true;
+    return const_cast<ClassJournal &>(journal());
 }
 
 void ClassJournalFile::save() {
     ofstream out(name);
-    out << *journal;
-    _has_unsaved_changes = false;
+    out << *_journal;
+    _unsaved = false;
+}
+
+bool ClassJournalFile::unsaved() const {
+    return _unsaved;
 }
 
 void ClassJournalFile::load() {
     ifstream in(name);
     ClassJournal loaded;
     in >> loaded;
-    journal = loaded;
-    _has_unsaved_changes = false;
+    _journal = loaded;
+    _unsaved = false;
 }
 
 bool ClassJournalFile::exists_on_disk() const {

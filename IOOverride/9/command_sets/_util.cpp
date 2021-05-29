@@ -9,7 +9,7 @@ bool check_file_saved(optional<ClassJournalFile> &file) {
     if (!file.has_value()) {
         return true;
     }
-    if (file->has_unsaved_changes()) {
+    if (file->unsaved()) {
         cout << "Есть несохраненные изменения.\nИспользуйте \"save\" для сохранения, или \"close!\" для принудительного закрытия.\n";
         return false;
     }

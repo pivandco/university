@@ -10,17 +10,15 @@ public:
     std::string name;
 
     ClassJournalFile(std::string name);
-    const ClassJournal &get_journal();
-    ClassJournal &get_journal_and_mark_changed();
+    const ClassJournal &journal();
+    ClassJournal &writable_journal();
     void save();
-    inline bool has_unsaved_changes() const {
-        return _has_unsaved_changes;
-    }
+    bool unsaved() const;
     bool exists_on_disk() const;
 
 private:
-    std::optional<ClassJournal> journal;
-    bool _has_unsaved_changes = false;
+    std::optional<ClassJournal> _journal;
+    bool _unsaved = false;
 
     void load();
 };
