@@ -70,6 +70,20 @@
             "problemMatcher": [
                 "$gcc"
             ]
+        },
+        {
+            "type": "shell",
+            "label": "IO9",
+            "command": "/usr/bin/make",
+            "args": [
+                "a.out"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/IOOverride/9"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
         }
     ],
     "version": "2.0.0"

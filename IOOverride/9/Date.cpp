@@ -17,7 +17,7 @@ Date Date::from_string(const string &date_string) {
     if (!regex_match(date_string, match, DATE_REGEX)) {
         throw BadDateException(date_string);
     }
-    return Date { stoi(match[0]), stoi(match[1]), stoi(match[2]) };
+    return Date { stoi(match[1]), stoi(match[2]), stoi(match[3]) };
 }
 
 string Date::to_string() const {

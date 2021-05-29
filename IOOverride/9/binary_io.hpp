@@ -14,53 +14,52 @@ template<typename T> void bin_write(std::ostream &out, const T &obj) {
 }
 
 template<> inline void bin_read(std::istream &in, std::string &str) {
-    size_t str_size;
-    bin_read(in, str_size);
-    str.resize(str_size);
-    in.read(str.data(), str_size);
+    size_t len;
+    bin_read(in, len);
+    str.resize(len);
+    in.read(str.data(), len);
 }
 
 template<> inline void bin_write(std::ostream &out, const std::string &str) {
-    bin_write(out, str.size());
-    bin_write(out, str.c_str());
+    size_t size = str.size();
+    bin_write(out, size);
+    out.write(str.c_str(), size);
 }
 
 template<typename T>
-void bin_read(std::istream &in, std::vector<T> &vec) {
+void bin_read_vector(std::istream &in, std::vector<T> &vec, void (*read_callback)(std::istream &, T &)) {
     size_t size;
     bin_read(in, size);
     vec.resize(size);
     for (size_t i = 0; i < size; i++) {
-        bin_read(in, vec[i]);
+        read_callback(in, vec[i]);
     }
 }
 
 template<typename T>
-void bin_write(std::ostream &out, const std::vector<T> &vec) {
+void bin_write_vector(std::ostream &out, const std::vector<T> &vec, void (*write_callback)(std::ostream &, const T &)) {
     bin_write(out, vec.size());
     for (auto &item : vec) {
-        bin_write(out, item);
+        write_callback(out, item);
     }
 }
 
 template<typename K, typename V>
-void bin_read(std::istream &in, std::map<K, V> &map) {
+void bin_read_map(std::istream &in, std::map<K, V> &map, void (*read_callback)(std::istream &, K &, V &)) {
     size_t size;
     bin_read(in, size);
     for (size_t i = 0; i < size; i++) {
         K key;
         V value;
-        bin_read(in, key);
-        bin_read(in, value);
+        read_callback(in, key, value);
         map[key] = value;
     }
 }
 
 template<typename K, typename V>
-void bin_write(std::ostream &out, std::map<K, V> &map) {
+void bin_write_map(std::ostream &out, const std::map<K, V> &map, void (*write_callback)(std::ostream &, const K &, const V &)) {
     bin_write(out, map.size());
-    for (auto &pair : map) {
-        bin_write(out, pair->first);
-        bin_write(out, pair->second);
+    for (auto &[first, second] : map) {
+        write_callback(out, first, second);
     }
 }

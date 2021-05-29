@@ -28,13 +28,19 @@ string Lesson::to_string_with_marks() const {
 istream &operator>>(istream &in, Lesson &lesson) {
     bin_read(in, lesson.topic);
     in >> lesson.date;
-    bin_read(in, lesson.marks);
+    bin_read_map<string, int>(in, lesson.marks, [] (istream &in, string &student, int &mark) {
+        bin_read(in, student);
+        bin_read(in, mark);
+    });
     return in;
 }
 
 ostream &operator<<(ostream &out, const Lesson &lesson) {
     bin_write(out, lesson.topic);
     out << lesson.date;
-    bin_write(out, lesson.marks);
+    bin_write_map<string, int>(out, lesson.marks, [] (ostream &out, const string &student, const int &mark) {
+        bin_write(out, student);
+        bin_write(out, mark);
+    });
     return out;
 }

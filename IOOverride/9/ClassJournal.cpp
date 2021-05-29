@@ -23,12 +23,16 @@ string ClassJournal::to_string() const {
 
 istream &operator>>(istream &in, ClassJournal &journal) {
     bin_read(in, journal.name);
-    bin_read(in, journal.lessons);
+    bin_read_vector<Lesson>(in, journal.lessons, [] (istream &in, Lesson &lesson) {
+        in >> lesson;
+    });
     return in;
 }
 
 ostream &operator<<(ostream &out, const ClassJournal &journal) {
     bin_write(out, journal.name);
-    bin_write(out, journal.lessons);
+    bin_write_vector<Lesson>(out, journal.lessons, [] (ostream &out, const Lesson &lesson) {
+        out << lesson;
+    });
     return out;
 }
