@@ -1,5 +1,6 @@
 #include "Date.hpp"
 
+#include <stdexcept>
 #include <iomanip>
 #include <sstream>
 #include <regex>
@@ -10,12 +11,13 @@ using std::string, std::stoi;
 using std::stringstream;
 using std::setfill, std::setw;
 using std::regex, std::smatch, std::regex_match;
+using std::logic_error;
 
 Date Date::from_string(const string &date_string) {
     const regex DATE_REGEX("(\\d{1,2})\\.(\\d{1,2})\\.(\\d{4})");
     smatch match;
     if (!regex_match(date_string, match, DATE_REGEX)) {
-        throw BadDateException(date_string);
+        throw logic_error(date_string);
     }
     return Date { stoi(match[1]), stoi(match[2]), stoi(match[3]) };
 }
