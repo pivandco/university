@@ -1,13 +1,13 @@
 #pragma once
 
-#include <string>
-
 #include "AppState.hpp"
+#include "CLI.hpp"
 
 class App {
 public:
-    void command_loop();
+    void loop();
 
 private:
     AppState state;
+    CLI cli;
 };

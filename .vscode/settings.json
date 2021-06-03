@@ -1,5 +1,5 @@
 {
-    "files.encoding": "windows1251",
+    "files.encoding": "utf8",
     "files.associations": {
         "*.html": "html",
         "array": "cpp",
@@ -72,6 +72,8 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "valarray": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "regex": "cpp",
+        "*.rh": "cpp"
     }
 }

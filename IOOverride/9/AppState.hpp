@@ -1,7 +1,12 @@
 #pragma once
 
-#include "ClassJournal.hpp"
+#include <optional>
+
+#include "Command.hpp"
+#include "ClassJournalFile.hpp"
 
 struct AppState {
-    ClassJournal *current_journal = nullptr;
+    std::optional<ClassJournalFile> journal_file;
+
+    void consume_callback(void (*)(AppState &));
 };

@@ -2,6 +2,6 @@
 
 int main() {
     App app;
-    app.command_loop();
+    app.loop();
     return 0;
 }

@@ -1,0 +1,129 @@
+@startuml IO_Override_9
+
+hide empty members
+remove FileIsEmptyException
+set namespaceSeparator none
+
+' class main.cpp <<(F,white) file>> {
+'     App app
+'     int main()
+' }
+' main.cpp::app *-- App
+' main.cpp::main ..> CommandRegistry
+' main.cpp::main ..> command_sets
+
+class App {
+    - AppState state
+    - CLI cli
+
+    + App()
+    + void loop()
+}
+App *-- CLI
+App *-- AppState
+
+class CLI {
+    + CLI()
+    + Command get_command()
+
+    - CommandRegistry cmdreg
+}
+CLI ..> CommandRegistry
+CLI ..> command_sets
+
+class AppState <<(S,lightgreen) struct>> {
+    + optional<ClassJournalFile> journal_file
+    + consume_callback(void (*cmd)(AppState &))
+}
+AppState *-- ClassJournalFile
+
+together {
+    class Command <<(S,lightgreen) struct>> {
+        + const char *help
+        + void (*command_callback)(AppState &)
+    }
+    Command ..> AppState
+
+    class CommandRegistry <<singleton>> {
+        - {static} CommandRegistry instance
+        - map<string, Command> _commands
+
+        + {static} CommandRegistry get()
+        + void add_command_set(map<string, Command> commands)
+        + const Command find_command(string name) const
+        + CommandSet commands()
+    }
+    CommandRegistry o- "*" Command
+
+    class command_sets<<(N,blue) namespace>> {
+        map<string, Command> FILE
+        map<string, Command> MISC
+        map<string, Command> MODEL
+    }
+    command_sets ..|> Command
+}
+' note top : Команды содержатся\nв глобальном массиве COMMANDS в commands.cpp.
+
+together {
+    class ClassJournalFile {
+        + string name
+        - optional<ClassJournal> _journal
+        - bool _unsaved = false
+
+        + ClassJournalFile(string name)
+        + const ClassJournal journal()
+        + ClassJournal writable_journal()
+        + save()
+        + bool unsaved()
+        + bool exists_on_disk()
+    }
+    ClassJournalFile *-- ClassJournal
+
+    class ClassJournal <<(S,lightgreen) struct>> {
+        + string name
+        + vector<Lesson> lessons
+
+        + string to_string() const
+        + istream operator>>(istream in)
+        + ostream operator<<(ostream out)
+    }
+    ClassJournal "1" *- "*" Lesson
+}
+
+class FileIsEmptyException <<(E,red) exception>>
+FileIsEmptyException <. ClassJournalFile::load
+
+class Lesson <<(S,lightgreen) struct>> {
+    + string topic
+    + Date date
+    + map<char *, int> marks
+
+    + string to_string_brief()
+    + string to_string_with_marks()
+    + istream operator>>(istream in)
+    + ostream operator<<(ostream out)
+}
+Lesson *- Date
+
+class Date <<(S,lightgreen) struct>> {
+    + int day = 0
+    + int month = 0
+    + int year = 0
+
+    + {static} Date from_string(string date_str)
+    + string to_string()
+    + istream operator>>(istream in)
+    + ostream operator<<(ostream out)
+}
+
+class binary_io.hpp <<(F,white) file>> {
+    + bin_read<T>(istream in, T &obj)
+    + bin_write<T>(ostream out, T &obj)
+
+    + {method} ... специализации шаблонов ...
+}
+binary_io.hpp <.. ClassJournal
+binary_io.hpp <.. Lesson
+binary_io.hpp <.. Date
+
+@enduml

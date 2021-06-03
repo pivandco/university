@@ -1,37 +1,57 @@
-all: a.out
+all: uml a.out
 	./a.out
 
-OS := $(shell uname -o)
+.PHONY: debug
+debug: a.out
+	gdb ./a.out
 
-CFLAGS :=
-
-ifeq ($(COVERAGE),1)
-	CFLAGS += --coverage
-endif
-
-googletest-build:
-	ifeq ($(OS),Msys)
-		cmake -G 'Unix Makefiles' -B googletest-build -DCMAKE_MAKE_PROGRAM=C:\Users\utkin.n\mingw\bin\make.exe ../../googletest
-	else
-		cmake -G 'Unix Makefiles' -B googletest-build ../../googletest
-	endif
-	$(MAKE) -C googletest-build
+CFLAGS := -g
 
 SOURCES := \
+	command_sets/_util.cpp \
+	command_sets/file.cpp \
+	command_sets/misc.cpp \
+	command_sets/model.cpp \
+	App.cpp \
 	AppState.cpp \
 	ClassJournal.cpp \
-	commands.cpp \
+	ClassJournalFile.cpp \
+	CLI.cpp \
+	CommandRegistry.cpp \
+	Date.cpp \
+	Lesson.cpp \
 	main.cpp
 
 HEADERS := \
+	command_sets/_util.hpp \
+	command_sets/file.hpp \
+	command_sets/misc.hpp \
+	command_sets/model.hpp \
+	App.hpp \
 	AppState.hpp \
-	commands.hpp \
-	ClassJournal.hpp
+	binary_io.hpp \
+	ClassJournal.hpp \
+	ClassJournalFile.hpp \
+	CLI.hpp \
+	Command.hpp \
+	CommandRegistry.hpp \
+	Date.hpp \
+	Lesson.hpp \
+	printing.hpp
 
-a.out: $(SOURCES) $(HEADERS) | googletest-build
-	g++ $(CFLAGS) -o a.out -g -I../../googletest/googletest/include -I../../ -Lgoogletest-build/lib $(SOURCES) -lpthread -lgtest -lgtest_main
+OBJECTS := $(SOURCES:.cpp=.o)
 
-.PHONY: coverage
-coverage:
-	@mkdir -p coverage
-	gcovr -o coverage/coverage.html --html-details
+a.out: $(OBJECTS)
+	g++ $(CFLAGS) -o $@ $^
+
+%.o: %.cpp
+	g++ $(CFLAGS) -c -o $@ $<
+
+.PHONY: uml
+uml: IO_Override_9.png
+IO_Override_9.png: classes.puml
+	plantuml $<
+
+.PHONY: clean
+clean:
+	rm -rf *.o a.out

@@ -24,6 +24,25 @@
             "preLaunchTask": "Fractions"
         },
         {
+            "name": "IO9",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/IOOverride/9/a.out",
+            "cwd": "${workspaceFolder}/IOOverride/9",
+            "args": [],
+            "stopAtEntry": false,
+            "environment": [],
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Включить автоматическое форматирование для gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "IO9"
+        },
+        {
             "name": "g++.exe",
             "type": "cppdbg",
             "request": "launch",
