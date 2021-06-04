@@ -26,7 +26,7 @@ namespace Classes._4
 
         public Fraction Reduced()
         {
-            var d = GreatestCommonDivisor.Gcd(Numerator, Denominator);
+            var d = BigInteger.GreatestCommonDivisor(Numerator, Denominator);
             return new Fraction(Numerator / d, Denominator / d);
         }
 
